@@ -21,7 +21,7 @@ export default component$(() => {
                   <input class="form-control form-control-lg" type="text" placeholder="Your Name" />
                 </fieldset>
                 <fieldset class="form-group">
-                  <textarea class="form-control form-control-lg" rows="8" placeholder="Short bio about you"></textarea>
+                  <textarea class="form-control form-control-lg" rows={8} placeholder="Short bio about you"></textarea>
                 </fieldset>
                 <fieldset class="form-group">
                   <input class="form-control form-control-lg" type="text" placeholder="Email" />

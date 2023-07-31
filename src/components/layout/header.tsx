@@ -1,4 +1,7 @@
 import { component$ } from "@builder.io/qwik";
+
+import { Link } from "@builder.io/qwik-city";
+
 export default component$(() => {
   return (
     <nav class="navbar navbar-light">
@@ -8,27 +11,28 @@ export default component$(() => {
         </a>
         <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
-            <a class="nav-link active" href="/">
+            <Link class="nav-link active" href="/">
               Home
-            </a>
+            </Link>
           </li>
+
           <li class="nav-item">
-            <a class="nav-link" href="/editor">
-              {" "}
+            <Link class="nav-link" href="/editor">
               <i class="ion-compose"></i>&nbsp;New Article{" "}
-            </a>
+            </Link>
           </li>
+
           <li class="nav-item">
-            <a class="nav-link" href="/settings">
+            <Link class="nav-link" href="/settings">
               {" "}
               <i class="ion-gear-a"></i>&nbsp;Settings{" "}
-            </a>
+            </Link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/profile/eric-simons">
+            <Link class="nav-link" href="/profile/eric-simons">
               <img src="" class="user-pic" />
               Eric Simons
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
