@@ -1,8 +1,15 @@
-import { component$ } from "@builder.io/qwik";
-import ArticleList from "../articles/article-list";
+import { component$, useStore } from "@builder.io/qwik";
 import TagsSidebar from "../tags/tags-sidebar";
+import { ArticleList } from "../articles/article-list";
+
+export interface OverviewStore {
+  selectedTag: string;
+  selectedNavElement: string;
+}
 
 export default component$(() => {
+  const store = useStore<OverviewStore>({ selectedTag: "", selectedNavElement: "Global Feed" });
+
   return (
     <div class="container page">
       <div class="row">
@@ -21,21 +28,14 @@ export default component$(() => {
               </li>
             </ul>
           </div>
-          <ArticleList />
-          <ul class="pagination">
-            <li class="page-item active">
-              <a class="page-link" href="">
-                1
-              </a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" href="">
-                2
-              </a>
-            </li>
-          </ul>
+          <ArticleList selectedTag={store.selectedTag} />
         </div>
-        <TagsSidebar />
+
+        <TagsSidebar
+          updateTag$={async (tag) => {
+            store.selectedTag = tag;
+          }}
+        />
       </div>
     </div>
   );
