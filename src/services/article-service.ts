@@ -1,8 +1,8 @@
 import { BASE_URL } from "~/common/api";
-import type { ArticlesDTO } from "~/models/article";
-import type { TagsDTO } from "~/models/tags";
+import type { ArticleData, ArticlesDTO } from "~/models/article";
+import type { CommentData } from "~/models/comment";
 
-export async function getTags(): Promise<TagsDTO> {
+export async function getTags(): Promise<string[]> {
   console.log("FETCH", `${BASE_URL}/tags`);
   try {
     const response = await fetch(`${BASE_URL}/tags`);
@@ -10,7 +10,8 @@ export async function getTags(): Promise<TagsDTO> {
       throw new Error(response.statusText);
     }
     console.log("FETCH tags resolved");
-    return await response.json();
+    const data = await response.json();
+    return data.tags;
   } catch (e) {
     return Promise.reject("Error occurred while fetching data");
   }
@@ -42,6 +43,40 @@ export async function getGlobalArticles(
     }
     console.log("FETCH articles resolved");
     return await response.json();
+  } catch (e) {
+    return Promise.reject("Error occurred while fetching data");
+  }
+}
+
+export async function getArticle(slug: string, controller?: AbortController): Promise<ArticleData> {
+  console.log("FETCH", `${BASE_URL}/articles/${slug}`);
+  try {
+    const response = await fetch(`${BASE_URL}/articles/${slug}`, {
+      signal: controller?.signal,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    console.log("FETCH article resolved");
+    const data = await response.json();
+    return data.article;
+  } catch (e) {
+    return Promise.reject("Error occurred while fetching data");
+  }
+}
+
+export async function getComments(slug: string, controller?: AbortController): Promise<CommentData[]> {
+  console.log("FETCH", `${BASE_URL}/articles/${slug}/comments`);
+  try {
+    const response = await fetch(`${BASE_URL}/articles/${slug}/comments`, {
+      signal: controller?.signal,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    console.log("FETCH article resolved");
+    const data = await response.json();
+    return data.comments;
   } catch (e) {
     return Promise.reject("Error occurred while fetching data");
   }

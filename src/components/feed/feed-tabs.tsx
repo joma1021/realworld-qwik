@@ -1,7 +1,7 @@
 import type { PropFunction } from "@builder.io/qwik";
 import { component$, useTask$ } from "@builder.io/qwik";
 import { Tab } from "~/models/tab";
-import type { OverviewStore } from "../overview";
+import type { OverviewStore } from "../articles/article-overview";
 import { Link } from "@builder.io/qwik-city";
 
 interface TagSidebarProps {

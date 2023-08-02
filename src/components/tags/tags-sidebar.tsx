@@ -1,6 +1,5 @@
 import type { PropFunction } from "@builder.io/qwik";
 import { Resource, component$, useResource$ } from "@builder.io/qwik";
-import type { TagsDTO } from "~/models/tags";
 import { getTags } from "~/services/article-service";
 
 interface TagSidebarProps {
@@ -8,7 +7,7 @@ interface TagSidebarProps {
 }
 
 export default component$((props: TagSidebarProps) => {
-  const tags = useResource$<TagsDTO>(({ cleanup }) => {
+  const tags = useResource$<string[]>(({ cleanup }) => {
     const controller = new AbortController();
     cleanup(() => controller.abort());
     return getTags();
@@ -23,7 +22,7 @@ export default component$((props: TagSidebarProps) => {
           onRejected={(reason) => <div>Error: {reason}</div>}
           onResolved={(tags) => (
             <div class="tag-list">
-              {tags.tags.map((tag, i) => (
+              {tags.map((tag, i) => (
                 <a
                   class="tag-pill tag-default"
                   style="cursor: pointer;"

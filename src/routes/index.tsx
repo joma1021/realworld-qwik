@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import Overview from "../components/overview";
+import ArticleOverview from "../components/articles/article-overview";
 
 export default component$(() => {
   return (
@@ -11,7 +11,7 @@ export default component$(() => {
           <p>A place to share your knowledge.</p>
         </div>
       </div>
-      <Overview />
+      <ArticleOverview />
     </div>
   );
 });

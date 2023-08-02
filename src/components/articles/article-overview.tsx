@@ -1,6 +1,6 @@
 import { component$, useStore } from "@builder.io/qwik";
 import TagsSidebar from "../tags/tags-sidebar";
-import { ArticleList } from "../articles/article-list";
+import { ArticleList } from "./article-list";
 import FeedTabs from "../feed/feed-tabs";
 import { Tab } from "~/models/tab";
 

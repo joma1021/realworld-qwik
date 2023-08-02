@@ -1,7 +1,7 @@
 import { Resource, component$, useResource$, useStore, useTask$ } from "@builder.io/qwik";
 import type { ArticlesDTO } from "~/models/article";
 import { getGlobalArticles } from "~/services/article-service";
-import type { OverviewStore } from "../overview";
+import type { OverviewStore } from "./article-overview";
 
 interface ArticleListProps {
   overviewStore: OverviewStore;
@@ -52,7 +52,7 @@ export const ArticleList = component$((props: ArticleListProps) => {
                       <i class="ion-heart"></i> {article.favoritesCount}
                     </button>
                   </div>
-                  <a href={`${article.slug}`} class="preview-link">
+                  <a href={`/article/${article.slug}`} class="preview-link">
                     <h1>{article.title}</h1>
                     <p>{article.description}</p>
                     <span>Read more...</span>
