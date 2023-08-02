@@ -1,16 +1,17 @@
 import { Resource, component$, useResource$, useStore, useTask$ } from "@builder.io/qwik";
 import type { ArticlesDTO } from "~/models/article";
 import { getGlobalArticles } from "~/services/article-service";
+import type { OverviewStore } from "../overview";
 
 interface ArticleListProps {
-  selectedTag: string;
+  overviewStore: OverviewStore;
 }
 
 export const ArticleList = component$((props: ArticleListProps) => {
   const articleListStore = useStore({ pageNumber: 1 });
 
   useTask$(({ track, cleanup }) => {
-    track(() => props.selectedTag);
+    track(() => props.overviewStore.selectedTag);
     articleListStore.pageNumber = 1;
     console.log("tag update tracked");
     const controller = new AbortController();
@@ -19,11 +20,11 @@ export const ArticleList = component$((props: ArticleListProps) => {
 
   const articles = useResource$<ArticlesDTO>(({ track, cleanup }) => {
     track(() => articleListStore.pageNumber);
-    track(() => props.selectedTag);
+    track(() => props.overviewStore.selectedTag);
     const controller = new AbortController();
     cleanup(() => controller.abort());
     console.log("call article fetch");
-    return getGlobalArticles(controller, props.selectedTag, articleListStore.pageNumber);
+    return getGlobalArticles(controller, props.overviewStore.selectedTag, articleListStore.pageNumber);
   });
   console.log("Render Article-List");
   return (
