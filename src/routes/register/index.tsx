@@ -3,24 +3,32 @@ import { useNavigate } from "@builder.io/qwik-city";
 import { validateInput } from "~/common/helpers";
 import { setToken } from "~/common/storage";
 import AuthError from "~/components/errors/auth-error";
-import type { LoginCredentials } from "~/models/auth";
-import { login } from "~/services/auth-service";
+import type { RegisterCredentials } from "~/models/auth";
+import { register } from "~/services/auth-service";
 
-export interface LoginStore {
+export interface RegisterStore {
   hasError: boolean;
   errorMessages: { [key: string]: string[] };
   isLoading: boolean;
 }
 
 export default component$(() => {
-  const registerStore = useStore<LoginStore>({ hasError: false, errorMessages: { [""]: [""] }, isLoading: false });
+  const registerStore = useStore<RegisterStore>({ hasError: false, errorMessages: { [""]: [""] }, isLoading: false });
   const navigate = useNavigate();
 
   const handleSubmit = $(async (event: any) => {
     registerStore.isLoading = true;
 
     const email = event.target.email.value;
+    const username = event.target.username.value;
     const password = event.target.password.value;
+
+    if (validateInput(username)) {
+      registerStore.errorMessages = { [username]: ["username can't be blank"] };
+      registerStore.hasError = true;
+      registerStore.isLoading = false;
+      return;
+    }
 
     if (validateInput(email)) {
       registerStore.errorMessages = { [email]: ["email can't be blank"] };
@@ -36,25 +44,25 @@ export default component$(() => {
       return;
     }
 
-    const credentials: LoginCredentials = {
+    const credentials: RegisterCredentials = {
+      username: username,
       email: email,
       password: password,
     };
-    const response = await login(credentials);
+    const response = await register(credentials);
     const data = await response.json();
 
     if (!response.ok) {
       console.log(data);
       registerStore.hasError = true;
-      registerStore.errorMessages = data.error;
+      registerStore.errorMessages = data.errors;
     } else {
       console.log(data);
       // setUser(data.user);
       setToken(data.user.token);
-      console.log("Login successful");
+      console.log("Register successful");
       navigate("/");
     }
-
     registerStore.isLoading = false;
   });
 
@@ -65,11 +73,14 @@ export default component$(() => {
           <div class="col-md-6 offset-md-3 col-xs-12">
             <h1 class="text-xs-center">Sign up</h1>
             <p class="text-xs-center">
-              <a href="/register">Need an account?</a>
+              <a href="/login">Have an account?</a>
             </p>
             {registerStore.hasError && <AuthError errors={registerStore.errorMessages} />}
 
             <form onSubmit$={handleSubmit} preventdefault:submit>
+              <fieldset class="form-group">
+                <input class="form-control form-control-lg" name="username" type="text" placeholder="Username" />
+              </fieldset>
               <fieldset class="form-group">
                 <input class="form-control form-control-lg" name="email" type="email" placeholder="Email" />
               </fieldset>
@@ -77,7 +88,7 @@ export default component$(() => {
                 <input class="form-control form-control-lg" name="password" type="password" placeholder="Password" />
               </fieldset>
               <button class="btn btn-lg btn-primary pull-xs-right" type="submit" disabled={registerStore.isLoading}>
-                Sign in
+                Sign up
               </button>
             </form>
           </div>

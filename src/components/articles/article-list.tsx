@@ -71,37 +71,21 @@ export const ArticleList = component$((props: ArticleListProps) => {
             <ul class="pagination">
               {Array(Math.ceil(articles.articlesCount / 10))
                 .fill(null)
-                .map((_, i) =>
-                  i == articleListStore.pageNumber - 1 ? (
-                    <li class={`page-item active`} key={i}>
-                      <a
-                        class="page-link"
-                        style="cursor: pointer;"
-                        onClick$={() => {
-                          console.log(`pagenunber=${articleListStore.pageNumber}`);
-                          articleListStore.pageNumber = i + 1;
-                          console.log(`newpagenunber=${articleListStore.pageNumber}`);
-                        }}
-                      >
-                        {i + 1}
-                      </a>
-                    </li>
-                  ) : (
-                    <li class={`page-item`} key={i}>
-                      <a
-                        class="page-link"
-                        style="cursor: pointer;"
-                        onClick$={() => {
-                          console.log(`pagenunber=${articleListStore.pageNumber}`);
-                          articleListStore.pageNumber = i + 1;
-                          console.log(`newpagenunber=${articleListStore.pageNumber}`);
-                        }}
-                      >
-                        {i + 1}
-                      </a>
-                    </li>
-                  )
-                )}
+                .map((_, i) => (
+                  <li class={`page-item  ${i == articleListStore.pageNumber - 1 ? "active" : ""}`} key={i}>
+                    <a
+                      class="page-link"
+                      style="cursor: pointer;"
+                      onClick$={() => {
+                        console.log(`pagenunber=${articleListStore.pageNumber}`);
+                        articleListStore.pageNumber = i + 1;
+                        console.log(`newpagenunber=${articleListStore.pageNumber}`);
+                      }}
+                    >
+                      {i + 1}
+                    </a>
+                  </li>
+                ))}
             </ul>
           </>
         )}
