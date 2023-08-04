@@ -27,15 +27,15 @@ export default component$((props: TagSidebarProps) => {
   return (
     <div class="feed-toggle">
       <ul class="nav nav-pills outline-active">
-        {tabs.map((tab, i) =>
+        {tabs.map((tab) =>
           props.overviewStore.activeTab == tab.tab ? (
-            <li class="nav-item" key={i}>
+            <li class="nav-item" key={tab.label}>
               <Link class="nav-link active">
                 {props.overviewStore.activeTab == Tab.Tag ? `#${props.overviewStore.selectedTag}` : tab.label}
               </Link>
             </li>
           ) : (
-            <li class="nav-item" key={i}>
+            <li class="nav-item" key={tab.label}>
               <Link
                 class="nav-link"
                 style="cursor: pointer;"

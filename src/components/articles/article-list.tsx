@@ -36,8 +36,8 @@ export const ArticleList = component$((props: ArticleListProps) => {
         onResolved={(articles) => (
           <>
             <ul>
-              {articles.articles.map((article, i) => (
-                <div class="article-preview" key={i}>
+              {articles.articles.map((article) => (
+                <div class="article-preview" key={article.slug}>
                   <div class="article-meta">
                     <a href={`/profile/${article.author.username}`}>
                       <img src={`${article.author.image}`} />
@@ -57,8 +57,8 @@ export const ArticleList = component$((props: ArticleListProps) => {
                     <p>{article.description}</p>
                     <span>Read more...</span>
                     <ul class="tag-list">
-                      {article.tagList.map((tag, i) => (
-                        <li key={i} class="tag-default tag-pill tag-outline">
+                      {article.tagList.map((tag) => (
+                        <li key={tag} class="tag-default tag-pill tag-outline">
                           {tag}
                         </li>
                       ))}

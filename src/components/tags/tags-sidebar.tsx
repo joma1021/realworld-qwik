@@ -22,11 +22,11 @@ export default component$((props: TagSidebarProps) => {
           onRejected={(reason) => <div>Error: {reason}</div>}
           onResolved={(tags) => (
             <div class="tag-list">
-              {tags.map((tag, i) => (
+              {tags.map((tag) => (
                 <a
                   class="tag-pill tag-default"
                   style="cursor: pointer;"
-                  key={i}
+                  key={tag}
                   onClick$={async () => await props.updateTag$(tag)}
                 >
                   {tag}

@@ -29,8 +29,8 @@ export default component$((props: { slug: string }) => {
           onRejected={(reason) => <div>Error: {reason}</div>}
           onResolved={(comments) => (
             <div class="tag-list">
-              {comments.map((comment, i) => (
-                <div class="card" key={i}>
+              {comments.map((comment) => (
+                <div class="card" key={comment.id}>
                   <div class="card-block">
                     <p class="card-text">{comment.body}</p>
                   </div>
