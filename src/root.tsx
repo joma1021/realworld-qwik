@@ -1,8 +1,14 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, createContextId, useContextProvider, useStore, useStyles$ } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
+import styles from "./global.css?inline";
+import type { UserData } from "./models/user";
 
-import "./global.css";
+export const userSessionContext = createContextId<UserSessionStore>("user-session");
+export interface UserSessionStore {
+  user: UserData | null;
+  isLoggedIn: boolean;
+}
 
 export default component$(() => {
   /**
@@ -11,7 +17,12 @@ export default component$(() => {
    *
    * Don't remove the `<head>` and `<body>` elements.
    */
+  useStyles$(styles);
+  // useVisibleTask$(){}
 
+  const userSession = useStore<UserSessionStore>({ user: null, isLoggedIn: false });
+
+  useContextProvider(userSessionContext, userSession);
   return (
     <QwikCityProvider>
       <head>
@@ -23,7 +34,6 @@ export default component$(() => {
           rel="stylesheet"
           type="text/css"
         />
-        <link rel="stylesheet" href="//demo.productionready.io/main.css" />
         <link rel="manifest" href="/manifest.json" />
         <RouterHead />
       </head>

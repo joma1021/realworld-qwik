@@ -10,12 +10,10 @@ interface ArticleListProps {
 export const ArticleList = component$((props: ArticleListProps) => {
   const articleListStore = useStore({ pageNumber: 1 });
 
-  useTask$(({ track, cleanup }) => {
+  useTask$(({ track }) => {
     track(() => props.overviewStore.selectedTag);
     articleListStore.pageNumber = 1;
     console.log("tag update tracked");
-    const controller = new AbortController();
-    cleanup(() => controller.abort());
   });
 
   const articles = useResource$<ArticlesDTO>(({ track, cleanup }) => {

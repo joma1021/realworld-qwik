@@ -17,11 +17,9 @@ export default component$((props: TagSidebarProps) => {
     { tab: Tab.Tag, label: "" },
   ];
 
-  useTask$(({ track, cleanup }) => {
+  useTask$(({ track }) => {
     track(() => props.overviewStore.selectedTag);
     if (props.overviewStore.selectedTag != "") props.updateTab$(Tab.Tag);
-    const controller = new AbortController();
-    cleanup(() => controller.abort());
   });
   console.log(`Render Feed-Tabs: Props-Tag:${props.overviewStore.activeTab};`);
   return (
