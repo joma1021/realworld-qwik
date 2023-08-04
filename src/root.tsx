@@ -1,10 +1,20 @@
-import { component$, createContextId, useContextProvider, useStore, useStyles$ } from "@builder.io/qwik";
+import {
+  component$,
+  createContextId,
+  useContextProvider,
+  useStore,
+  useStyles$,
+  useVisibleTask$,
+} from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
 import styles from "./global.css?inline";
 import type { UserData } from "./models/user";
+import { getToken } from "./common/storage";
+import { getCurrentUser } from "./services/auth-service";
+import { updateUserSession } from "./common/helpers";
 
-export const userSessionContext = createContextId<UserSessionStore>("user-session");
+export const UserSessionContext = createContextId<UserSessionStore>("user-session");
 export interface UserSessionStore {
   user: UserData | null;
   isLoggedIn: boolean;
@@ -18,11 +28,16 @@ export default component$(() => {
    * Don't remove the `<head>` and `<body>` elements.
    */
   useStyles$(styles);
-  // useVisibleTask$(){}
-
   const userSession = useStore<UserSessionStore>({ user: null, isLoggedIn: false });
+  useVisibleTask$(async () => {
+    const response = getToken() ? await getCurrentUser() : null;
 
-  useContextProvider(userSessionContext, userSession);
+    if (response != null) {
+      updateUserSession(userSession, response, true);
+    }
+  });
+
+  useContextProvider(UserSessionContext, userSession);
   return (
     <QwikCityProvider>
       <head>
