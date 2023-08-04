@@ -7,7 +7,7 @@ export async function getTags(): Promise<string[]> {
   try {
     const response = await fetch(`${BASE_URL}/tags`);
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return Promise.reject(response.statusText);
     }
     console.log("FETCH tags resolved");
     const data = await response.json();
@@ -39,7 +39,7 @@ export async function getGlobalArticles(
       signal: controller?.signal,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return Promise.reject(response.statusText);
     }
     console.log("FETCH articles resolved");
     return await response.json();
@@ -55,7 +55,7 @@ export async function getArticle(slug: string, controller?: AbortController): Pr
       signal: controller?.signal,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return Promise.reject(response.statusText);
     }
     console.log("FETCH article resolved");
     const data = await response.json();
@@ -72,7 +72,7 @@ export async function getComments(slug: string, controller?: AbortController): P
       signal: controller?.signal,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return Promise.reject(response.statusText);
     }
     console.log("FETCH article resolved");
     const data = await response.json();
