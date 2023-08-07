@@ -1,7 +1,7 @@
 import { component$, useContext } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
-import type { UserSessionStore } from "~/root";
-import { UserSessionContext } from "~/root";
+import type { UserSessionStore } from "~/components/auth/auth-provider";
+import { UserSessionContext } from "~/components/auth/auth-provider";
 
 export default component$(() => {
   const userSession = useContext<UserSessionStore>(UserSessionContext);

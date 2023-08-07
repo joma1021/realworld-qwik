@@ -1,24 +1,8 @@
-import {
-  component$,
-  createContextId,
-  useContextProvider,
-  useStore,
-  useStyles$,
-  useVisibleTask$,
-} from "@builder.io/qwik";
+import { component$, useStyles$ } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
 import styles from "./global.css?inline";
-import type { UserData } from "./models/user";
-import { getToken } from "./common/storage";
-import { getCurrentUser } from "./services/auth-service";
-import { updateUserSession } from "./common/helpers";
-
-export const UserSessionContext = createContextId<UserSessionStore>("user-session");
-export interface UserSessionStore {
-  user: UserData | null;
-  isLoggedIn: boolean;
-}
+import AuthProvider from "./components/auth/auth-provider";
 
 export default component$(() => {
   /**
@@ -28,16 +12,7 @@ export default component$(() => {
    * Don't remove the `<head>` and `<body>` elements.
    */
   useStyles$(styles);
-  const userSession = useStore<UserSessionStore>({ user: null, isLoggedIn: false });
-  useVisibleTask$(async () => {
-    const response = getToken() ? await getCurrentUser() : null;
 
-    if (response != null) {
-      updateUserSession(userSession, response, true);
-    }
-  });
-
-  useContextProvider(UserSessionContext, userSession);
   return (
     <QwikCityProvider>
       <head>
@@ -53,8 +28,10 @@ export default component$(() => {
         <RouterHead />
       </head>
       <body lang="en">
-        <RouterOutlet />
-        <ServiceWorkerRegister />
+        <AuthProvider>
+          <RouterOutlet />
+          <ServiceWorkerRegister />
+        </AuthProvider>
       </body>
     </QwikCityProvider>
   );

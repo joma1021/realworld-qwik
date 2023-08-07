@@ -1,6 +1,26 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useSignal, $, useContext } from "@builder.io/qwik";
+import { clearToken } from "~/common/storage";
+import { updateUserSession } from "~/common/helpers";
+import type { UserSessionStore } from "~/components/auth/auth-provider";
+import { UserSessionContext } from "~/components/auth/auth-provider";
+import { useNavigate } from "@builder.io/qwik-city";
 
 export default component$(() => {
+  const isLoading = useSignal(false);
+  const userSession = useContext<UserSessionStore>(UserSessionContext);
+  const navigate = useNavigate();
+
+  const handleLogout = $(async () => {
+    isLoading.value = true;
+
+    clearToken();
+    updateUserSession(userSession, null, false);
+
+    console.log("Register successful");
+    navigate("/");
+    isLoading.value = false;
+  });
+
   return (
     <div class="settings-page">
       <div class="container page">
@@ -33,7 +53,9 @@ export default component$(() => {
               </fieldset>
             </form>
             <hr />
-            <button class="btn btn-outline-danger">Or click here to logout.</button>
+            <button class="btn btn-outline-danger" onClick$={handleLogout} disabled={isLoading.value}>
+              Or click here to logout.
+            </button>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-const TOKEN_KEY = "token";
+const TOKEN_KEY = "realworld-qwik-auth-token";
 
 export function getToken(): string | undefined {
   return localStorage.getItem(TOKEN_KEY) || undefined;

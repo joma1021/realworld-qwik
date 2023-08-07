@@ -2,11 +2,10 @@ import { component$, $, useStore, useContext } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import { updateUserSession, validateInput } from "~/common/helpers";
 import { setToken } from "~/common/storage";
+import { UserSessionContext, type UserSessionStore } from "~/components/auth/auth-provider";
 import AuthError from "~/components/errors/auth-error";
 import type { RegisterCredentials } from "~/models/auth";
 import { register } from "~/services/auth-service";
-import type { UserSessionStore } from "~/root";
-import { UserSessionContext } from "~/root";
 
 export interface RegisterStore {
   hasError: boolean;
