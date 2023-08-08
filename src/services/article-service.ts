@@ -2,6 +2,7 @@ import { BASE_URL } from "~/common/api";
 import { getHeaders } from "~/common/headers";
 import type { ArticleData, ArticlesDTO } from "~/models/article";
 import type { CommentData } from "~/models/comment";
+import { Tab } from "~/models/tab";
 
 export async function getTags(): Promise<string[]> {
   console.log("FETCH", `${BASE_URL}/tags`);
@@ -53,23 +54,55 @@ export async function getGlobalArticles(
 export async function getYourArticles(
   token: string,
   controller?: AbortController,
-  tag?: string,
   page?: number
 ): Promise<ArticlesDTO> {
   const offset = page ? (page - 1) * 10 : 0;
-  const searchParams = tag
-    ? new URLSearchParams({
-        limit: "10",
-        offset: `${offset}`,
-        tag: tag,
-      })
-    : new URLSearchParams({
-        limit: "10",
-        offset: `${offset}`,
-      });
+  const searchParams = new URLSearchParams({
+    limit: "10",
+    offset: `${offset}`,
+  });
   console.log("FETCH", `${BASE_URL}/articles/feed?` + searchParams);
   try {
     const response = await fetch(`${BASE_URL}/articles/feed?` + searchParams, {
+      method: "GET",
+      signal: controller?.signal,
+      headers: getHeaders(token),
+    });
+    if (!response.ok) {
+      return Promise.reject(response.statusText);
+    }
+    console.log("FETCH articles resolved");
+    return await response.json();
+  } catch (e) {
+    return Promise.reject("Error occurred while fetching data");
+  }
+}
+
+export async function getProfileArticles(
+  username: string,
+  tab: Tab,
+  token: string,
+  controller?: AbortController,
+  page?: number
+): Promise<ArticlesDTO> {
+  const offset = page ? (page - 1) * 5 : 0;
+
+  const searchParams =
+    tab == Tab.FavArticles
+      ? new URLSearchParams({
+          limit: "5",
+          offset: `${offset}`,
+          favorited: username,
+        })
+      : new URLSearchParams({
+          limit: "5",
+          offset: `${offset}`,
+          author: username,
+        });
+
+  console.log("FETCH", `${BASE_URL}/articles?` + searchParams);
+  try {
+    const response = await fetch(`${BASE_URL}/articles?` + searchParams, {
       method: "GET",
       signal: controller?.signal,
       headers: getHeaders(token),

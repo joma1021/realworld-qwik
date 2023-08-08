@@ -4,13 +4,13 @@ import { Tab } from "~/models/tab";
 import type { OverviewStore } from "../articles/article-overview";
 import { Link } from "@builder.io/qwik-city";
 
-interface TagSidebarProps {
+interface FeedTabsProps {
   overviewStore: OverviewStore;
   updateTag$: PropFunction<(tag: string) => void>;
   updateTab$: PropFunction<(tab: Tab) => void>;
 }
 
-export default component$((props: TagSidebarProps) => {
+export default component$((props: FeedTabsProps) => {
   const tabs = [
     { tab: Tab.Your, label: "Your Feed" },
     { tab: Tab.Global, label: "Global Feed" },

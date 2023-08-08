@@ -1,19 +1,62 @@
-import { Resource, component$, useContext, useResource$ } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { Resource, component$, useContext, useResource$, useStore } from "@builder.io/qwik";
+import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/components/auth/auth-provider";
 import { UserSessionContext } from "~/components/auth/auth-provider";
+import ProfileTabs from "~/components/tabs/profile-tabs";
+import type { ArticlesDTO } from "~/models/article";
 import type { AuthorData } from "~/models/author";
+import { Tab } from "~/models/tab";
+import { getProfileArticles } from "~/services/article-service";
 import { getProfile } from "~/services/profile-service";
+import { Article } from "~/components/articles/article";
+
+export interface ProfileStore {
+  activeTab: Tab;
+  pageNumber: number;
+}
 
 export default component$(() => {
+  const navigate = useNavigate();
   const username = useLocation().params.username;
   const userSession = useContext<UserSessionStore>(UserSessionContext);
+  const profileStore = useStore<ProfileStore>({
+    activeTab: Tab.MyArticles,
+    pageNumber: 1,
+  });
 
-  const profile = useResource$<AuthorData>(async () => {
+  const profile = useResource$<AuthorData>(async ({ track, cleanup }) => {
+    track(() => username);
     const token = userSession.authToken;
     console.log(userSession);
+    const controller = new AbortController();
+    cleanup(() => controller.abort());
+    return getProfile(username, token, controller);
+  });
 
-    return getProfile(username, token);
+  const articles = useResource$<ArticlesDTO>(({ track, cleanup }) => {
+    track(() => profileStore.pageNumber);
+    track(() => profileStore.activeTab);
+    const controller = new AbortController();
+    cleanup(() => controller.abort());
+    console.log("call article fetch");
+
+    if (profileStore.activeTab == Tab.MyArticles) {
+      return getProfileArticles(
+        username,
+        profileStore.activeTab,
+        userSession.authToken,
+        controller,
+        profileStore.pageNumber
+      );
+    } else {
+      return getProfileArticles(
+        username,
+        profileStore.activeTab,
+        userSession.authToken,
+        controller,
+        profileStore.pageNumber
+      );
+    }
   });
 
   return (
@@ -32,7 +75,7 @@ export default component$(() => {
                   <p>{profile.bio}</p>
 
                   {profile.username == userSession.user?.username ? (
-                    <button class="btn btn-sm btn-outline-secondary action-btn">
+                    <button class="btn btn-sm btn-outline-secondary action-btn" onClick$={() => navigate("/settings")}>
                       <i class="ion-gear-a"></i>
                       &nbsp; Edit Profile Settings
                     </button>
@@ -52,85 +95,52 @@ export default component$(() => {
       <div class="container">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
-            <div class="articles-toggle">
-              <ul class="nav nav-pills outline-active">
-                <li class="nav-item">
-                  <a class="nav-link active" href="">
-                    My Articles
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="">
-                    Favorited Articles
-                  </a>
-                </li>
-              </ul>
-            </div>
+            <ProfileTabs
+              profileStore={profileStore}
+              updateTab$={async (tab) => {
+                profileStore.activeTab = tab;
+                console.log("tab updated to " + tab);
+              }}
+            />
 
-            <div class="article-preview">
-              <div class="article-meta">
-                <a href="/profile/eric-simons">
-                  <img src="http://i.imgur.com/Qr71crq.jpg" />
-                </a>
-                <div class="info">
-                  <a href="/profile/eric-simons" class="author">
-                    Eric Simons
-                  </a>
-                  <span class="date">January 20th</span>
-                </div>
-                <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i class="ion-heart"></i> 29
-                </button>
-              </div>
-              <a href="/article/how-to-buil-webapps-that-scale" class="preview-link">
-                <h1>How to build webapps that scale</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-                <ul class="tag-list">
-                  <li class="tag-default tag-pill tag-outline">realworld</li>
-                  <li class="tag-default tag-pill tag-outline">implementations</li>
-                </ul>
-              </a>
-            </div>
+            <Resource
+              value={articles}
+              onPending={() => <div>Loading Articles...</div>}
+              onRejected={(reason) => <div>Error: {reason}</div>}
+              onResolved={(articles) => (
+                <>
+                  {articles.articles.length == 0 ? (
+                    <div>No articles are here... yet.</div>
+                  ) : (
+                    <ul>
+                      {articles.articles.map((article) => (
+                        <Article article={article} key={article.slug} />
+                      ))}
+                    </ul>
+                  )}
 
-            <div class="article-preview">
-              <div class="article-meta">
-                <a href="/profile/albert-pai">
-                  <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                </a>
-                <div class="info">
-                  <a href="/profile/albert-pai" class="author">
-                    Albert Pai
-                  </a>
-                  <span class="date">January 20th</span>
-                </div>
-                <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i class="ion-heart"></i> 32
-                </button>
-              </div>
-              <a href="/article/the-song-you" class="preview-link">
-                <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-                <ul class="tag-list">
-                  <li class="tag-default tag-pill tag-outline">Music</li>
-                  <li class="tag-default tag-pill tag-outline">Song</li>
-                </ul>
-              </a>
-            </div>
-
-            <ul class="pagination">
-              <li class="page-item active">
-                <a class="page-link" href="">
-                  1
-                </a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="">
-                  2
-                </a>
-              </li>
-            </ul>
+                  <ul class="pagination">
+                    {Array(Math.ceil(articles.articlesCount / 5))
+                      .fill(null)
+                      .map((_, i) => (
+                        <li class={`page-item  ${i == profileStore.pageNumber - 1 ? "active" : ""}`} key={i}>
+                          <a
+                            class="page-link"
+                            style="cursor: pointer;"
+                            onClick$={() => {
+                              console.log(`pagenunber=${profileStore.pageNumber}`);
+                              profileStore.pageNumber = i + 1;
+                              console.log(`newpagenunber=${profileStore.pageNumber}`);
+                            }}
+                          >
+                            {i + 1}
+                          </a>
+                        </li>
+                      ))}
+                  </ul>
+                </>
+              )}
+            />
           </div>
         </div>
       </div>
