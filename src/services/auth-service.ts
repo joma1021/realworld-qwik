@@ -16,19 +16,19 @@ export async function register(credentials: RegisterCredentials) {
     body: JSON.stringify({ user: credentials }),
   });
 }
-export async function getCurrentUser(): Promise<UserData> {
+export async function getCurrentUser(token: string): Promise<UserData> {
   return fetch("https://api.realworld.io/api/user", {
     method: "GET",
-    headers: getHeaders(),
+    headers: getHeaders(token),
   })
     .then((res) => res.json())
     .then((res) => res.user);
 }
 
-export async function updateUser(user: unknown) {
+export async function updateUser(user: unknown, token: string) {
   return fetch("https://api.realworld.io/api/user", {
     method: "PUT",
-    headers: getHeaders(),
+    headers: getHeaders(token),
     body: JSON.stringify({ user }),
   });
 }

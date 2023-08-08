@@ -7,9 +7,7 @@ interface TagSidebarProps {
 }
 
 export default component$((props: TagSidebarProps) => {
-  const tags = useResource$<string[]>(({ cleanup }) => {
-    const controller = new AbortController();
-    cleanup(() => controller.abort());
+  const tags = useResource$<string[]>(() => {
     return getTags();
   });
   return (
@@ -18,7 +16,7 @@ export default component$((props: TagSidebarProps) => {
         <p>Popular Tags</p>
         <Resource
           value={tags}
-          onPending={() => <div>Loading Articles...</div>}
+          onPending={() => <div>Loading Tags...</div>}
           onRejected={(reason) => <div>Error: {reason}</div>}
           onResolved={(tags) => (
             <div class="tag-list">

@@ -1,11 +1,12 @@
 import { BASE_URL } from "~/common/api";
+import { getHeaders } from "~/common/headers";
 import type { ArticleData, ArticlesDTO } from "~/models/article";
 import type { CommentData } from "~/models/comment";
 
 export async function getTags(): Promise<string[]> {
   console.log("FETCH", `${BASE_URL}/tags`);
   try {
-    const response = await fetch(`${BASE_URL}/tags`);
+    const response = await fetch(`${BASE_URL}/tags`, { method: "GET" });
     if (!response.ok) {
       return Promise.reject(response.statusText);
     }
@@ -16,7 +17,6 @@ export async function getTags(): Promise<string[]> {
     return Promise.reject("Error occurred while fetching data");
   }
 }
-
 export async function getGlobalArticles(
   controller?: AbortController,
   tag?: string,
@@ -36,7 +36,9 @@ export async function getGlobalArticles(
   console.log("FETCH", `${BASE_URL}/articles?` + searchParams);
   try {
     const response = await fetch(`${BASE_URL}/articles?` + searchParams, {
+      method: "GET",
       signal: controller?.signal,
+      headers: getHeaders(),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
@@ -52,7 +54,9 @@ export async function getArticle(slug: string, controller?: AbortController): Pr
   console.log("FETCH", `${BASE_URL}/articles/${slug}`);
   try {
     const response = await fetch(`${BASE_URL}/articles/${slug}`, {
+      method: "GET",
       signal: controller?.signal,
+      headers: getHeaders(),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
@@ -69,7 +73,9 @@ export async function getComments(slug: string, controller?: AbortController): P
   console.log("FETCH", `${BASE_URL}/articles/${slug}/comments`);
   try {
     const response = await fetch(`${BASE_URL}/articles/${slug}/comments`, {
+      method: "GET",
       signal: controller?.signal,
+      headers: getHeaders(),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);

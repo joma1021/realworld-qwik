@@ -1,7 +1,9 @@
-import { component$, $, useStore } from "@builder.io/qwik";
+import { component$, $, useStore, useContext } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
-import { validateInput } from "~/common/helpers";
+import { updateUserSession, validateInput } from "~/common/helpers";
 import { setToken } from "~/common/storage";
+import type { UserSessionStore } from "~/components/auth/auth-provider";
+import { UserSessionContext } from "~/components/auth/auth-provider";
 import AuthError from "~/components/errors/auth-error";
 import type { LoginCredentials } from "~/models/auth";
 import { login } from "~/services/auth-service";
@@ -15,6 +17,7 @@ export interface LoginStore {
 export default component$(() => {
   const registerStore = useStore<LoginStore>({ hasError: false, errorMessages: { [""]: [""] }, isLoading: false });
   const navigate = useNavigate();
+  const userSession = useContext<UserSessionStore>(UserSessionContext);
 
   const handleSubmit = $(async (event: any) => {
     registerStore.isLoading = true;
@@ -44,13 +47,12 @@ export default component$(() => {
     const data = await response.json();
 
     if (!response.ok) {
-      console.log(data);
+      console.log(data.errors);
       registerStore.hasError = true;
-      registerStore.errorMessages = data.error;
+      registerStore.errorMessages = data.errors;
     } else {
-      console.log(data);
-      // setUser(data.user);
       setToken(data.user.token);
+      updateUserSession(userSession, data.user, true, data.user.token);
       console.log("Login successful");
       navigate("/");
     }
@@ -63,7 +65,7 @@ export default component$(() => {
       <div class="container page">
         <div class="row">
           <div class="col-md-6 offset-md-3 col-xs-12">
-            <h1 class="text-xs-center">Sign up</h1>
+            <h1 class="text-xs-center">Sign in</h1>
             <p class="text-xs-center">
               <a href="/register">Need an account?</a>
             </p>

@@ -62,7 +62,7 @@ export default component$(() => {
       console.log(data);
 
       setToken(data.user.token);
-      updateUserSession(userSession, data.user, true);
+      updateUserSession(userSession, data.user, true, data.user.token);
 
       console.log("Register successful");
       navigate("/");

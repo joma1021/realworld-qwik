@@ -1,4 +1,4 @@
-import { Resource, component$, useResource$, useStore, useTask$ } from "@builder.io/qwik";
+import { Resource, component$, useResource$, useSignal, useTask$ } from "@builder.io/qwik";
 import type { ArticlesDTO } from "~/models/article";
 import { getGlobalArticles } from "~/services/article-service";
 import type { OverviewStore } from "./article-overview";
@@ -8,21 +8,21 @@ interface ArticleListProps {
 }
 
 export const ArticleList = component$((props: ArticleListProps) => {
-  const articleListStore = useStore({ pageNumber: 1 });
+  const pageNumber = useSignal(1);
 
   useTask$(({ track }) => {
     track(() => props.overviewStore.selectedTag);
-    articleListStore.pageNumber = 1;
+    pageNumber.value = 1;
     console.log("tag update tracked");
   });
 
   const articles = useResource$<ArticlesDTO>(({ track, cleanup }) => {
-    track(() => articleListStore.pageNumber);
+    track(() => pageNumber.value);
     track(() => props.overviewStore.selectedTag);
     const controller = new AbortController();
     cleanup(() => controller.abort());
     console.log("call article fetch");
-    return getGlobalArticles(controller, props.overviewStore.selectedTag, articleListStore.pageNumber);
+    return getGlobalArticles(controller, props.overviewStore.selectedTag, pageNumber.value);
   });
   console.log("Render Article-List");
   return (
@@ -70,14 +70,14 @@ export const ArticleList = component$((props: ArticleListProps) => {
               {Array(Math.ceil(articles.articlesCount / 10))
                 .fill(null)
                 .map((_, i) => (
-                  <li class={`page-item  ${i == articleListStore.pageNumber - 1 ? "active" : ""}`} key={i}>
+                  <li class={`page-item  ${i == pageNumber.value - 1 ? "active" : ""}`} key={i}>
                     <a
                       class="page-link"
                       style="cursor: pointer;"
                       onClick$={() => {
-                        console.log(`pagenunber=${articleListStore.pageNumber}`);
-                        articleListStore.pageNumber = i + 1;
-                        console.log(`newpagenunber=${articleListStore.pageNumber}`);
+                        console.log(`pagenunber=${pageNumber.value}`);
+                        pageNumber.value = i + 1;
+                        console.log(`newpagenunber=${pageNumber.value}`);
                       }}
                     >
                       {i + 1}

@@ -14,7 +14,7 @@ export default component$(() => {
     isLoading.value = true;
 
     clearToken();
-    updateUserSession(userSession, null, false);
+    updateUserSession(userSession, null, false, "");
 
     console.log("Register successful");
     navigate("/");
@@ -29,22 +29,42 @@ export default component$(() => {
             <h1 class="text-xs-center">Your Settings</h1>
 
             <ul class="error-messages">
-              <li>That name is required</li>
+              <li>Not implemented yet</li>
             </ul>
 
             <form>
               <fieldset>
                 <fieldset class="form-group">
-                  <input class="form-control" type="text" placeholder="URL of profile picture" />
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="URL of profile picture"
+                    value={userSession.user?.image}
+                  />
                 </fieldset>
                 <fieldset class="form-group">
-                  <input class="form-control form-control-lg" type="text" placeholder="Your Name" />
+                  <input
+                    class="form-control form-control-lg"
+                    type="text"
+                    placeholder="Your Name"
+                    value={userSession.user?.username}
+                  />
                 </fieldset>
                 <fieldset class="form-group">
-                  <textarea class="form-control form-control-lg" rows={8} placeholder="Short bio about you"></textarea>
+                  <textarea
+                    class="form-control form-control-lg"
+                    rows={8}
+                    placeholder="Short bio about you"
+                    value={userSession.user?.bio}
+                  ></textarea>
                 </fieldset>
                 <fieldset class="form-group">
-                  <input class="form-control form-control-lg" type="text" placeholder="Email" />
+                  <input
+                    class="form-control form-control-lg"
+                    type="text"
+                    placeholder="Email"
+                    value={userSession.user?.email}
+                  />
                 </fieldset>
                 <fieldset class="form-group">
                   <input class="form-control form-control-lg" type="password" placeholder="New Password" />

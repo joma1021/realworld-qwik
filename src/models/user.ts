@@ -1,7 +1,7 @@
 export interface UserData {
   username: string;
   email: string;
-  bio: string | null;
+  bio: string;
   image: string;
   token: string;
 }

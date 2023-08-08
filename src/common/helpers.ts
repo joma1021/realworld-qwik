@@ -6,7 +6,17 @@ export const validateInput = (input: string) => {
   return false;
 };
 
-export const updateUserSession = (userSession: UserSessionStore, user: UserData | null, isLoggedIn: boolean) => {
+export const updateUserSession = (
+  userSession: UserSessionStore,
+  user: UserData | null,
+  isLoggedIn: boolean,
+  authToken: string
+) => {
   userSession.user = user;
   userSession.isLoggedIn = isLoggedIn;
+  userSession.authToken = authToken;
+};
+
+export const setUserSessionToken = (userSession: UserSessionStore, authToken: string) => {
+  userSession.authToken = authToken;
 };
