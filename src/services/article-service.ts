@@ -50,6 +50,40 @@ export async function getGlobalArticles(
   }
 }
 
+export async function getYourArticles(
+  token: string,
+  controller?: AbortController,
+  tag?: string,
+  page?: number
+): Promise<ArticlesDTO> {
+  const offset = page ? (page - 1) * 10 : 0;
+  const searchParams = tag
+    ? new URLSearchParams({
+        limit: "10",
+        offset: `${offset}`,
+        tag: tag,
+      })
+    : new URLSearchParams({
+        limit: "10",
+        offset: `${offset}`,
+      });
+  console.log("FETCH", `${BASE_URL}/articles/feed?` + searchParams);
+  try {
+    const response = await fetch(`${BASE_URL}/articles/feed?` + searchParams, {
+      method: "GET",
+      signal: controller?.signal,
+      headers: getHeaders(token),
+    });
+    if (!response.ok) {
+      return Promise.reject(response.statusText);
+    }
+    console.log("FETCH articles resolved");
+    return await response.json();
+  } catch (e) {
+    return Promise.reject("Error occurred while fetching data");
+  }
+}
+
 export async function getArticle(slug: string, controller?: AbortController): Promise<ArticleData> {
   console.log("FETCH", `${BASE_URL}/articles/${slug}`);
   try {

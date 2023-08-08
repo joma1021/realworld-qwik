@@ -17,6 +17,7 @@ export const updateUserSession = (
   userSession.authToken = authToken;
 };
 
-export const setUserSessionToken = (userSession: UserSessionStore, authToken: string) => {
+export const setUserSessionToken = (userSession: UserSessionStore, isLoggedIn: boolean, authToken: string) => {
   userSession.authToken = authToken;
+  userSession.isLoggedIn = isLoggedIn;
 };

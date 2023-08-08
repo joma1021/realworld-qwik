@@ -16,7 +16,7 @@ export default component$(() => {
     clearToken();
     updateUserSession(userSession, null, false, "");
 
-    console.log("Register successful");
+    console.log("Logout successful");
     navigate("/");
     isLoading.value = false;
   });

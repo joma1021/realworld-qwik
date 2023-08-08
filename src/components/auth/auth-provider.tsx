@@ -23,7 +23,7 @@ export interface UserSessionStore {
 const authToken = server$(async function () {
   const data = await this.cookie.get("auth-token");
 
-  return data?.value ?? "";
+  return data?.value;
 });
 
 export default component$(() => {
@@ -33,8 +33,15 @@ export default component$(() => {
 
     if (token != null) {
       console.log("i was here: useTask");
-      setUserSessionToken(userSession, token);
+
+      setUserSessionToken(userSession, true, token);
     }
+    // else {
+    //   clearToken();
+    //   updateUserSession(userSession, null, false, "");
+
+    //   console.log("Auto logout successful");
+    // }
   });
   useVisibleTask$(async () => {
     const token = userSession.authToken;

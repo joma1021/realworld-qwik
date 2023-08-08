@@ -1,8 +1,10 @@
-import { component$, useStore } from "@builder.io/qwik";
+import { component$, useContext, useStore } from "@builder.io/qwik";
 import TagsSidebar from "../tags/tags-sidebar";
 import { ArticleList } from "./article-list";
 import FeedTabs from "../feed/feed-tabs";
 import { Tab } from "~/models/tab";
+import type { UserSessionStore } from "../auth/auth-provider";
+import { UserSessionContext } from "../auth/auth-provider";
 
 export interface OverviewStore {
   selectedTag: string;
@@ -11,7 +13,8 @@ export interface OverviewStore {
 
 export default component$(() => {
   console.log("build index store");
-  const store = useStore<OverviewStore>({ selectedTag: "", activeTab: Tab.Global });
+  const userSession = useContext<UserSessionStore>(UserSessionContext);
+  const store = useStore<OverviewStore>({ selectedTag: "", activeTab: userSession.isLoggedIn ? Tab.Your : Tab.Global });
 
   return (
     <div class="container page">
@@ -24,6 +27,7 @@ export default component$(() => {
             }}
             updateTab$={async (tab) => {
               store.activeTab = tab;
+              console.log("tab updated to " + tab);
             }}
           />
           <ArticleList overviewStore={store} />
