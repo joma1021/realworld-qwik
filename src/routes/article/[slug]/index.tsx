@@ -1,11 +1,15 @@
-import { Resource, component$, useResource$ } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { Resource, component$, useContext, useResource$, $ } from "@builder.io/qwik";
+import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import Comments from "~/components/comments/comments";
 import type { ArticleData } from "~/models/article";
 import { getArticle } from "~/services/article-service";
+import type { UserSessionStore } from "~/components/auth/auth-provider";
+import { UserSessionContext } from "~/components/auth/auth-provider";
 
 export default component$(() => {
+  const userSession = useContext<UserSessionStore>(UserSessionContext);
   const slug = useLocation().params.slug;
+  const navigate = useNavigate();
 
   const article = useResource$<ArticleData>(({ cleanup }) => {
     const controller = new AbortController();
@@ -36,21 +40,37 @@ export default component$(() => {
                     </a>
                     <span class="date">{article.createdAt}</span>
                   </div>
-                  <button class="btn btn-sm btn-outline-secondary">
-                    <i class="ion-plus-round"></i>
-                    &nbsp; Follow {article.author.username} <span class="counter"></span>
-                  </button>
+                  {userSession.user?.username != article.author.username && (
+                    <button
+                      class="btn btn-sm btn-outline-secondary"
+                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
+                    >
+                      <i class="ion-plus-round"></i>
+                      &nbsp; Follow {article.author.username} <span class="counter"></span>
+                    </button>
+                  )}
                   &nbsp;&nbsp;
-                  <button class="btn btn-sm btn-outline-primary">
-                    <i class="ion-heart"></i>
-                    &nbsp; Favorite Article <span class="counter">({article.favoritesCount})</span>
-                  </button>
-                  <button class="btn btn-sm btn-outline-secondary">
-                    <i class="ion-edit"></i> Edit Article
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger">
-                    <i class="ion-trash-a"></i> Delete Article
-                  </button>
+                  {userSession.user?.username != article.author.username && (
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
+                    >
+                      <i class="ion-heart"></i>
+                      &nbsp; Favorite Article <span class="counter">({article.favoritesCount})</span>
+                    </button>
+                  )}
+                  &nbsp;&nbsp;
+                  {userSession.user?.username == article.author.username && (
+                    <button class="btn btn-sm btn-outline-secondary">
+                      <i class="ion-edit"></i> Edit Article
+                    </button>
+                  )}
+                  &nbsp;&nbsp;
+                  {userSession.user?.username == article.author.username && (
+                    <button class="btn btn-sm btn-outline-danger">
+                      <i class="ion-trash-a"></i> Delete Article
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -83,21 +103,37 @@ export default component$(() => {
                     </a>
                     <span class="date">{article.createdAt}</span>
                   </div>
-                  <button class="btn btn-sm btn-outline-secondary">
-                    <i class="ion-plus-round"></i>
-                    &nbsp; Follow {article.author.username}
-                  </button>
-                  &nbsp;
-                  <button class="btn btn-sm btn-outline-primary">
-                    <i class="ion-heart"></i>
-                    &nbsp; Favorite Article <span class="counter">({article.favoritesCount})</span>
-                  </button>
-                  <button class="btn btn-sm btn-outline-secondary">
-                    <i class="ion-edit"></i> Edit Article
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger">
-                    <i class="ion-trash-a"></i> Delete Article
-                  </button>
+                  {userSession.user?.username != article.author.username && (
+                    <button
+                      class="btn btn-sm btn-outline-secondary"
+                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
+                    >
+                      <i class="ion-plus-round"></i>
+                      &nbsp; Follow {article.author.username} <span class="counter"></span>
+                    </button>
+                  )}
+                  &nbsp;&nbsp;
+                  {userSession.user?.username != article.author.username && (
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
+                    >
+                      <i class="ion-heart"></i>
+                      &nbsp; Favorite Article <span class="counter">({article.favoritesCount})</span>
+                    </button>
+                  )}
+                  &nbsp;&nbsp;
+                  {userSession.user?.username == article.author.username && (
+                    <button class="btn btn-sm btn-outline-secondary">
+                      <i class="ion-edit"></i> Edit Article
+                    </button>
+                  )}
+                  &nbsp;&nbsp;
+                  {userSession.user?.username == article.author.username && (
+                    <button class="btn btn-sm btn-outline-danger">
+                      <i class="ion-trash-a"></i> Delete Article
+                    </button>
+                  )}
                 </div>
               </div>
               <Comments slug={slug} />

@@ -1,4 +1,4 @@
-import { Resource, component$, useContext, useResource$, useStore } from "@builder.io/qwik";
+import { Resource, component$, useContext, useResource$, useStore, $ } from "@builder.io/qwik";
 import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/components/auth/auth-provider";
 import { UserSessionContext } from "~/components/auth/auth-provider";
@@ -75,7 +75,10 @@ export default component$(() => {
                   <p>{profile.bio}</p>
 
                   {profile.username == userSession.user?.username ? (
-                    <button class="btn btn-sm btn-outline-secondary action-btn" onClick$={() => navigate("/settings")}>
+                    <button
+                      class="btn btn-sm btn-outline-secondary action-btn"
+                      onClick$={$(() => navigate("/settings"))}
+                    >
                       <i class="ion-gear-a"></i>
                       &nbsp; Edit Profile Settings
                     </button>
