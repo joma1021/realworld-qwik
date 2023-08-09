@@ -1,8 +1,10 @@
 import type { PropFunction } from "@builder.io/qwik";
-import { component$, useTask$ } from "@builder.io/qwik";
+import { component$, useTask$, useContext } from "@builder.io/qwik";
 import { Tab } from "~/models/tab";
 import type { OverviewStore } from "../articles/article-overview";
 import { Link } from "@builder.io/qwik-city";
+import type { UserSessionStore } from "../auth/auth-provider";
+import { UserSessionContext } from "../auth/auth-provider";
 
 interface FeedTabsProps {
   overviewStore: OverviewStore;
@@ -11,12 +13,7 @@ interface FeedTabsProps {
 }
 
 export default component$((props: FeedTabsProps) => {
-  const tabs = [
-    { tab: Tab.Your, label: "Your Feed" },
-    { tab: Tab.Global, label: "Global Feed" },
-    { tab: Tab.Tag, label: "" },
-  ];
-
+  const userSession = useContext<UserSessionStore>(UserSessionContext);
   useTask$(({ track }) => {
     track(() => props.overviewStore.selectedTag);
     if (props.overviewStore.selectedTag != "") props.updateTab$(Tab.Tag);
@@ -25,28 +22,39 @@ export default component$((props: FeedTabsProps) => {
   return (
     <div class="feed-toggle">
       <ul class="nav nav-pills outline-active">
-        {tabs.map((tab) =>
-          props.overviewStore.activeTab == tab.tab ? (
-            <li class="nav-item" key={tab.label}>
-              <Link class="nav-link active">
-                {props.overviewStore.activeTab == Tab.Tag ? `#${props.overviewStore.selectedTag}` : tab.label}
-              </Link>
-            </li>
-          ) : (
-            <li class="nav-item" key={tab.label}>
-              <Link
-                class="nav-link"
-                style="cursor: pointer;"
-                onClick$={async () => {
-                  await props.updateTab$(tab.tab);
-                  await props.updateTag$("");
-                }}
-              >
-                {tab.label}
-              </Link>
-            </li>
-          )
-        )}{" "}
+        <li class="nav-item">
+          {userSession.isLoggedIn && (
+            <Link
+              class={`nav-link ${props.overviewStore.activeTab == Tab.Your && "active"}`}
+              style="cursor: pointer;"
+              onClick$={async () => {
+                await props.updateTab$(Tab.Your);
+                await props.updateTag$("");
+              }}
+            >
+              Your Feed
+            </Link>
+          )}
+        </li>
+        <li class="nav-item">
+          <Link
+            class={`nav-link ${props.overviewStore.activeTab == Tab.Global && "active"}`}
+            style="cursor: pointer;"
+            onClick$={async () => {
+              await props.updateTab$(Tab.Global);
+              await props.updateTag$("");
+            }}
+          >
+            Global Feed
+          </Link>
+        </li>
+        {props.overviewStore.activeTab == Tab.Tag && (
+          <li class="nav-item">
+            <Link class={`nav-link ${props.overviewStore.activeTab == Tab.Tag && "active"}`} style="cursor: pointer;">
+              #{props.overviewStore.selectedTag}
+            </Link>
+          </li>
+        )}
       </ul>
     </div>
   );
