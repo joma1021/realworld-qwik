@@ -1,10 +1,12 @@
 import { component$ } from "@builder.io/qwik";
+import { Link } from "@builder.io/qwik-city";
 import type { ArticleData } from "~/models/article";
 
 export const Article = component$((props: { article: ArticleData; key: string }) => {
   return (
     <div class="article-preview" key={props.key}>
       <div class="article-meta">
+        {/* TODO: <Link> doesn't lead to a updated of userprofile / reload of page if switching between profiles even tough rout url updates. It may be a bug from qwik -> find solution*/}
         <a href={`/profile/${props.article.author.username}`}>
           <img src={`${props.article.author.image}`} />
         </a>
@@ -18,7 +20,7 @@ export const Article = component$((props: { article: ArticleData; key: string })
           <i class="ion-heart"></i> {props.article.favoritesCount}
         </button>
       </div>
-      <a href={`/article/${props.article.slug}`} class="preview-link">
+      <Link href={`/article/${props.article.slug}`} class="preview-link">
         <h1>{props.article.title}</h1>
         <p>{props.article.description}</p>
         <span>Read more...</span>
@@ -29,7 +31,7 @@ export const Article = component$((props: { article: ArticleData; key: string })
             </li>
           ))}
         </ul>
-      </a>
+      </Link>
     </div>
   );
 });

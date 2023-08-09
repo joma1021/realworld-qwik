@@ -9,9 +9,9 @@ export default component$(() => {
     // TODO: active tab if clicked
     <nav class="navbar navbar-light">
       <div class="container">
-        <a class="navbar-brand" href="/">
+        <Link class="navbar-brand" href="/">
           conduit
-        </a>
+        </Link>
         {userSession.isLoggedIn ? (
           <ul class="nav navbar-nav pull-xs-right">
             <li class="nav-item">
@@ -33,7 +33,7 @@ export default component$(() => {
               </Link>
             </li>
             <li class="nav-item">
-              {/* TODO: <Link> doesn't lead to a updated of userprofile if switching between profiles even tough rout url updates. It may be a bug from qwik -> find solution*/}
+              {/* TODO: <Link> doesn't lead to a updated of userprofile / reload of page if switching between profiles even tough rout url updates. It may be a bug from qwik -> find solution*/}
               <a class="nav-link" href={`/profile/${userSession.user?.username}`}>
                 <img width={25} height={25} src={userSession.user?.image} class="user-pic" />
                 {userSession.user?.username}

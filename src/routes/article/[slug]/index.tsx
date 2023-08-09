@@ -1,5 +1,5 @@
 import { Resource, component$, useContext, useResource$, $ } from "@builder.io/qwik";
-import { useLocation, useNavigate } from "@builder.io/qwik-city";
+import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import Comments from "~/components/comments/comments";
 import type { ArticleData } from "~/models/article";
 import { getArticle } from "~/services/article-service";
@@ -31,13 +31,13 @@ export default component$(() => {
                 <h1>{article.title}</h1>
 
                 <div class="article-meta">
-                  <a href={`/profile/${article.author.username}`}>
+                  <Link href={`/profile/${article.author.username}`}>
                     <img src={article.author.image} />
-                  </a>
+                  </Link>
                   <div class="info">
-                    <a href={`/profile/${article.author.username}`} class="author">
+                    <Link href={`/profile/${article.author.username}`} class="author">
                       {article.author.username}
-                    </a>
+                    </Link>
                     <span class="date">{article.createdAt}</span>
                   </div>
                   {userSession.user?.username != article.author.username && (
@@ -94,13 +94,13 @@ export default component$(() => {
 
               <div class="article-actions">
                 <div class="article-meta">
-                  <a href="profile.html">
+                  <Link href="profile.html">
                     <img src={article.author.image} />
-                  </a>
+                  </Link>
                   <div class="info">
-                    <a href="" class="author">
+                    <Link href="" class="author">
                       {article.author.username}
-                    </a>
+                    </Link>
                     <span class="date">{article.createdAt}</span>
                   </div>
                   {userSession.user?.username != article.author.username && (

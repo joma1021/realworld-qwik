@@ -24,8 +24,7 @@ export default component$(() => {
     pageNumber: 1,
   });
 
-  const profile = useResource$<AuthorData>(async ({ track, cleanup }) => {
-    track(() => username);
+  const profile = useResource$<AuthorData>(async ({ cleanup }) => {
     const token = userSession.authToken;
     console.log(userSession);
     const controller = new AbortController();

@@ -99,13 +99,13 @@ export default component$((props: { slug: string }) => {
                     <p class="card-text">{comment.body}</p>
                   </div>
                   <div class="card-footer">
-                    <a href={`/profile/${comment.author}`} class="comment-author">
+                    <Link href={`/profile/${comment.author}`} class="comment-author">
                       <img src={comment.author.image} class="comment-author-img" />
-                    </a>
+                    </Link>
                     &nbsp;
-                    <a href={`/profile/${comment.author}`} class="comment-author">
+                    <Link href={`/profile/${comment.author}`} class="comment-author">
                       {comment.author.username}
-                    </a>
+                    </Link>
                     <span class="date-posted">{comment.createdAt}</span>
                     {comment.author.username == userSession.user?.username && (
                       <span class="mod-options">
