@@ -1,12 +1,18 @@
-import { component$, useContext } from "@builder.io/qwik";
-import { Link } from "@builder.io/qwik-city";
+import { component$, useContext, useSignal, useTask$ } from "@builder.io/qwik";
+import { Link, useLocation } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/components/auth/auth-provider";
 import { UserSessionContext } from "~/components/auth/auth-provider";
 
 export default component$(() => {
   const userSession = useContext<UserSessionStore>(UserSessionContext);
+  const pathname = useSignal("");
+  const { url } = useLocation();
+  useTask$(({ track }) => {
+    track(() => url);
+    pathname.value = url.pathname;
+    console.log("path:" + pathname.value);
+  });
   return (
-    // TODO: active tab if clicked
     <nav class="navbar navbar-light">
       <div class="container">
         <Link class="navbar-brand" href="/">
@@ -15,26 +21,29 @@ export default component$(() => {
         {userSession.isLoggedIn ? (
           <ul class="nav navbar-nav pull-xs-right">
             <li class="nav-item">
-              <Link class="nav-link active" href="/">
+              <Link class={`nav-link ${pathname.value == "/" ? "active" : ""}`} href="/">
                 Home
               </Link>
             </li>
 
             <li class="nav-item">
-              <Link class="nav-link" href="/editor">
+              <Link class={`nav-link ${pathname.value === "/editor/" ? "active" : ""}`} href="/editor">
                 <i class="ion-compose"></i>&nbsp;New Article{" "}
               </Link>
             </li>
 
             <li class="nav-item">
-              <Link class="nav-link" href="/settings">
+              <Link class={`nav-link ${pathname.value === "/setting/" ? "active" : ""}`} href="/settings">
                 {" "}
                 <i class="ion-gear-a"></i>&nbsp;Settings{" "}
               </Link>
             </li>
             <li class="nav-item">
               {/* TODO: <Link> doesn't lead to a updated of userprofile / reload of page if switching between profiles even tough rout url updates. It may be a bug from qwik -> find solution*/}
-              <a class="nav-link" href={`/profile/${userSession.user?.username}`}>
+              <a
+                class={`nav-link ${pathname.value.includes("profile") ? "active" : ""}`}
+                href={`/profile/${userSession.user?.username}`}
+              >
                 <img width={25} height={25} src={userSession.user?.image} class="user-pic" />
                 {userSession.user?.username}
               </a>
@@ -43,17 +52,17 @@ export default component$(() => {
         ) : (
           <ul class="nav navbar-nav pull-xs-right">
             <li class="nav-item">
-              <Link class="nav-link " href="/">
+              <Link class={`nav-link ${pathname.value === "/" ? "active" : ""}`} href="/">
                 Home
               </Link>
             </li>
             <li class="nav-item">
-              <Link class="nav-link " href="/login">
+              <Link class={`nav-link ${pathname.value === "/login/" ? "active" : ""}`} href="/login">
                 Sign In
               </Link>
             </li>
             <li class="nav-item">
-              <Link class="nav-link " href="/register">
+              <Link class={`nav-link ${pathname.value === "/register/" ? "active" : ""}`} href="/register">
                 Sign Up
               </Link>
             </li>
