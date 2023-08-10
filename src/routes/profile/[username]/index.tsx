@@ -1,4 +1,5 @@
 import { Resource, component$, useContext, useResource$, useStore, $ } from "@builder.io/qwik";
+import type { RequestHandler } from "@builder.io/qwik-city";
 import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/components/auth/auth-provider";
 import { UserSessionContext } from "~/components/auth/auth-provider";
@@ -14,6 +15,10 @@ export interface ProfileStore {
   activeTab: Tab;
   pageNumber: number;
 }
+export const onGet: RequestHandler = ({ cookie, redirect }) => {
+  const authToken = cookie.get("authToken")?.value;
+  if (!authToken) throw redirect(302, "/login");
+};
 
 export default component$(() => {
   const navigate = useNavigate();

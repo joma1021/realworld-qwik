@@ -10,7 +10,6 @@ export default component$(() => {
   useTask$(({ track }) => {
     track(() => url);
     pathname.value = url.pathname;
-    console.log("path:" + pathname.value);
   });
   return (
     <nav class="navbar navbar-light">
