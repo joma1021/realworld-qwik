@@ -18,7 +18,6 @@ export default component$((props: FeedTabsProps) => {
     track(() => props.overviewStore.selectedTag);
     if (props.overviewStore.selectedTag != "") props.updateTab$(Tab.Tag);
   });
-  console.log(`Render Feed-Tabs: Props-Tag:${props.overviewStore.activeTab};`);
   return (
     <div class="feed-toggle">
       <ul class="nav nav-pills outline-active">

@@ -2,15 +2,9 @@ import { component$, useSignal, $, useContext, useResource$, Resource } from "@b
 import { updateUserSession } from "~/common/helpers";
 import type { UserSessionStore } from "~/components/auth/auth-provider";
 import { UserSessionContext } from "~/components/auth/auth-provider";
-import type { RequestHandler } from "@builder.io/qwik-city";
 import { useNavigate } from "@builder.io/qwik-city";
 import { clearAuthToken, getCurrentUser } from "~/services/auth-service";
 import type { UserData } from "~/models/user";
-
-export const onGet: RequestHandler = ({ cookie, redirect }) => {
-  const authToken = cookie.get("authToken")?.value;
-  if (!authToken) throw redirect(302, "/login");
-};
 
 export default component$(() => {
   const isLoading = useSignal(false);

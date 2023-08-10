@@ -12,7 +12,6 @@ export interface OverviewStore {
 }
 
 export default component$(() => {
-  console.log("build index store");
   const userSession = useContext<UserSessionStore>(UserSessionContext);
   const overviewStore = useStore<OverviewStore>({
     selectedTag: "",
@@ -30,7 +29,6 @@ export default component$(() => {
             }}
             updateTab$={async (tab) => {
               overviewStore.activeTab = tab;
-              console.log("tab updated to " + tab);
             }}
           />
           <ArticleList overviewStore={overviewStore} />

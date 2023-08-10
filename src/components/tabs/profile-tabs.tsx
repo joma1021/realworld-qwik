@@ -15,7 +15,6 @@ export default component$((props: ProfileTabsProps) => {
     { tab: Tab.FavArticles, label: "Favorite Articles" },
   ];
 
-  console.log(`Render Feed-Tabs: Props-Tag:${props.profileStore.activeTab};`);
   return (
     <div class="article-toggle">
       <ul class="nav nav-pills outline-active">

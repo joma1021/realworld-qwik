@@ -54,7 +54,6 @@ export default component$(() => {
     const data = await response.json();
 
     if (!response.ok) {
-      console.log(data);
       registerStore.hasError = true;
       registerStore.errorMessages = data.errors;
     } else {

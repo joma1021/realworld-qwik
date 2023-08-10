@@ -23,7 +23,6 @@ export default component$((props: { slug: string }) => {
     commentStore.refreshComments = false;
     const controller = new AbortController();
     cleanup(() => controller.abort());
-    console.log("call article fetch");
     return getComments(props.slug, userSession.authToken, controller);
   });
 
@@ -39,11 +38,9 @@ export default component$((props: { slug: string }) => {
     try {
       commentStore.newComment = await createComment(props.slug, comment, userSession.authToken);
     } catch (e) {
-      console.log("Error:" + e);
       commentStore.isLoading = false;
       return;
     }
-    console.log("Comment added successful");
     commentStore.isLoading = false;
     event.target.comment.value = "";
   });
@@ -53,10 +50,8 @@ export default component$((props: { slug: string }) => {
       await deleteComment(props.slug, commentId, userSession.authToken);
       commentStore.refreshComments = true;
     } catch (e) {
-      console.log("Error:" + e);
       return;
     }
-    console.log("Comment added successful");
   });
 
   return (

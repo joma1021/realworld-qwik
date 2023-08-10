@@ -1,5 +1,4 @@
 import { Resource, component$, useContext, useResource$, useStore, $ } from "@builder.io/qwik";
-import type { RequestHandler } from "@builder.io/qwik-city";
 import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/components/auth/auth-provider";
 import { UserSessionContext } from "~/components/auth/auth-provider";
@@ -15,10 +14,6 @@ export interface ProfileStore {
   activeTab: Tab;
   pageNumber: number;
 }
-export const onGet: RequestHandler = ({ cookie, redirect }) => {
-  const authToken = cookie.get("authToken")?.value;
-  if (!authToken) throw redirect(302, "/login");
-};
 
 export default component$(() => {
   const navigate = useNavigate();
@@ -31,7 +26,6 @@ export default component$(() => {
 
   const profile = useResource$<AuthorData>(async ({ cleanup }) => {
     const token = userSession.authToken;
-    console.log(userSession);
     const controller = new AbortController();
     cleanup(() => controller.abort());
     return getProfile(username, token, controller);
@@ -42,7 +36,6 @@ export default component$(() => {
     track(() => profileStore.activeTab);
     const controller = new AbortController();
     cleanup(() => controller.abort());
-    console.log("call article fetch");
 
     if (profileStore.activeTab == Tab.MyArticles) {
       return getProfileArticles(
@@ -106,7 +99,6 @@ export default component$(() => {
               profileStore={profileStore}
               updateTab$={async (tab) => {
                 profileStore.activeTab = tab;
-                console.log("tab updated to " + tab);
               }}
             />
 
@@ -135,9 +127,7 @@ export default component$(() => {
                             class="page-link"
                             style="cursor: pointer;"
                             onClick$={() => {
-                              console.log(`pagenunber=${profileStore.pageNumber}`);
                               profileStore.pageNumber = i + 1;
-                              console.log(`newpagenunber=${profileStore.pageNumber}`);
                             }}
                           >
                             {i + 1}

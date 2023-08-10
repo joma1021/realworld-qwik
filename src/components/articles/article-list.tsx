@@ -18,7 +18,6 @@ export const ArticleList = component$((props: ArticleListProps) => {
   useTask$(({ track }) => {
     track(() => props.overviewStore.selectedTag);
     pageNumber.value = 1;
-    console.log("tag update tracked");
   });
 
   const articles = useResource$<ArticlesDTO>(({ track, cleanup }) => {
@@ -27,7 +26,6 @@ export const ArticleList = component$((props: ArticleListProps) => {
     track(() => props.overviewStore.activeTab);
     const controller = new AbortController();
     cleanup(() => controller.abort());
-    console.log("call article fetch");
 
     if (props.overviewStore.activeTab == Tab.Your) {
       return getYourArticles(userSession.authToken, controller, pageNumber.value);
@@ -35,7 +33,6 @@ export const ArticleList = component$((props: ArticleListProps) => {
       return getGlobalArticles(controller, props.overviewStore.selectedTag, pageNumber.value);
     }
   });
-  console.log("Render Article-List");
   return (
     <div>
       <Resource
@@ -63,9 +60,7 @@ export const ArticleList = component$((props: ArticleListProps) => {
                       class="page-link"
                       style="cursor: pointer;"
                       onClick$={() => {
-                        console.log(`pagenunber=${pageNumber.value}`);
                         pageNumber.value = i + 1;
-                        console.log(`newpagenunber=${pageNumber.value}`);
                       }}
                     >
                       {i + 1}
