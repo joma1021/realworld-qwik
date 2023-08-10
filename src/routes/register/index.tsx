@@ -1,11 +1,10 @@
 import { component$, $, useStore, useContext } from "@builder.io/qwik";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 import { updateUserSession, validateInput } from "~/common/helpers";
-import { setToken } from "~/common/storage";
 import { UserSessionContext, type UserSessionStore } from "~/components/auth/auth-provider";
 import AuthError from "~/components/errors/auth-error";
 import type { RegisterCredentials } from "~/models/auth";
-import { register } from "~/services/auth-service";
+import { register, setAuthCookies } from "~/services/auth-service";
 
 export interface RegisterStore {
   hasError: boolean;
@@ -59,11 +58,8 @@ export default component$(() => {
       registerStore.hasError = true;
       registerStore.errorMessages = data.errors;
     } else {
-      console.log(data);
-
-      setToken(data.user.token);
-      updateUserSession(userSession, data.user, true, data.user.token);
-
+      await setAuthCookies(data.user);
+      updateUserSession(userSession, data.user.username, data.user.image, true, data.user.token);
       console.log("Register successful");
       navigate("/");
     }

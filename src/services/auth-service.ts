@@ -32,3 +32,20 @@ export async function updateUser(user: unknown, token: string) {
     body: JSON.stringify({ user }),
   });
 }
+
+export async function setAuthCookies(user: UserData) {
+  await fetch("/middleware/auth", {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify({ token: user.token, username: user.username, image: user.image }),
+    credentials: "include",
+  });
+}
+
+export async function clearAuthToken() {
+  await fetch("/middleware/auth", {
+    method: "DELETE",
+    headers: getHeaders(),
+    credentials: "include",
+  });
+}

@@ -40,7 +40,7 @@ export default component$(() => {
                     </Link>
                     <span class="date">{article.createdAt}</span>
                   </div>
-                  {userSession.user?.username != article.author.username && (
+                  {userSession.username != article.author.username && (
                     <button
                       class="btn btn-sm btn-outline-secondary"
                       onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
@@ -50,7 +50,7 @@ export default component$(() => {
                     </button>
                   )}
                   &nbsp;&nbsp;
-                  {userSession.user?.username != article.author.username && (
+                  {userSession.username != article.author.username && (
                     <button
                       class="btn btn-sm btn-outline-primary"
                       onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
@@ -60,13 +60,13 @@ export default component$(() => {
                     </button>
                   )}
                   &nbsp;&nbsp;
-                  {userSession.user?.username == article.author.username && (
+                  {userSession.username == article.author.username && (
                     <button class="btn btn-sm btn-outline-secondary">
                       <i class="ion-edit"></i> Edit Article
                     </button>
                   )}
                   &nbsp;&nbsp;
-                  {userSession.user?.username == article.author.username && (
+                  {userSession.username == article.author.username && (
                     <button class="btn btn-sm btn-outline-danger">
                       <i class="ion-trash-a"></i> Delete Article
                     </button>
@@ -103,7 +103,7 @@ export default component$(() => {
                     </Link>
                     <span class="date">{article.createdAt}</span>
                   </div>
-                  {userSession.user?.username != article.author.username && (
+                  {userSession.username != article.author.username && (
                     <button
                       class="btn btn-sm btn-outline-secondary"
                       onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
@@ -113,7 +113,7 @@ export default component$(() => {
                     </button>
                   )}
                   &nbsp;&nbsp;
-                  {userSession.user?.username != article.author.username && (
+                  {userSession.username != article.author.username && (
                     <button
                       class="btn btn-sm btn-outline-primary"
                       onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
@@ -123,13 +123,13 @@ export default component$(() => {
                     </button>
                   )}
                   &nbsp;&nbsp;
-                  {userSession.user?.username == article.author.username && (
+                  {userSession.username == article.author.username && (
                     <button class="btn btn-sm btn-outline-secondary">
                       <i class="ion-edit"></i> Edit Article
                     </button>
                   )}
                   &nbsp;&nbsp;
-                  {userSession.user?.username == article.author.username && (
+                  {userSession.username == article.author.username && (
                     <button class="btn btn-sm btn-outline-danger">
                       <i class="ion-trash-a"></i> Delete Article
                     </button>

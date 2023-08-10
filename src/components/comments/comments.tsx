@@ -68,7 +68,7 @@ export default component$((props: { slug: string }) => {
               <textarea class="form-control" name="comment" placeholder="Write a comment..." rows={3}></textarea>
             </div>
             <div class="card-footer">
-              <img src={userSession.user?.image} class="comment-author-img" />
+              <img src={userSession.image} class="comment-author-img" />
               <button class="btn btn-sm btn-primary" type="submit" disabled={commentStore.isLoading}>
                 Post Comment{" "}
               </button>
@@ -107,7 +107,7 @@ export default component$((props: { slug: string }) => {
                       {comment.author.username}
                     </Link>
                     <span class="date-posted">{comment.createdAt}</span>
-                    {comment.author.username == userSession.user?.username && (
+                    {comment.author.username == userSession.username && (
                       <span class="mod-options">
                         <i class="ion-trash-a" onClick$={() => onDeleteComment(comment.id)}></i>
                       </span>

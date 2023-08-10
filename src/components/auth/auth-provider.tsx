@@ -1,56 +1,42 @@
-import {
-  Slot,
-  component$,
-  createContextId,
-  useContextProvider,
-  useStore,
-  useTask$,
-  useVisibleTask$,
-} from "@builder.io/qwik";
+import { Slot, component$, createContextId, useContextProvider, useStore, useTask$ } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
 
-import { setUserSessionToken, updateUserSession } from "~/common/helpers";
-import type { UserData } from "~/models/user";
-import { getCurrentUser } from "~/services/auth-service";
+import { updateUserSession } from "~/common/helpers";
 
 export const UserSessionContext = createContextId<UserSessionStore>("user-session");
 export interface UserSessionStore {
-  user: UserData | null;
+  username: string;
+  image: string | undefined;
   isLoggedIn: boolean;
   authToken: string;
 }
 
-const authToken = server$(async function () {
-  const data = await this.cookie.get("auth-token");
+export interface AutCookies {
+  username: string | undefined;
+  image: string | undefined;
+  authToken: string | undefined;
+}
 
-  return data?.value;
+const getAuthCookies = server$(async function (): Promise<AutCookies> {
+  const username = this.cookie.get("username")?.value;
+  const image = this.cookie.get("image")?.value;
+  const authToken = this.cookie.get("authToken")?.value;
+
+  return { username, image, authToken };
 });
 
 export default component$(() => {
-  const userSession = useStore<UserSessionStore>({ user: null, isLoggedIn: false, authToken: "" });
+  const userSession = useStore<UserSessionStore>({ username: "", image: "", isLoggedIn: false, authToken: "" });
   useTask$(async () => {
-    const token = await authToken();
+    const authCookies = await getAuthCookies();
 
-    if (token != null) {
-      console.log("i was here: useTask");
-
-      setUserSessionToken(userSession, true, token);
+    if (!authCookies.username || !authCookies.authToken) {
+      console.log("Auth failed");
+      return;
     }
-    // else {
-    //   clearToken();
-    //   updateUserSession(userSession, null, false, "");
 
-    //   console.log("Auto logout successful");
-    // }
-  });
-  useVisibleTask$(async () => {
-    const token = userSession.authToken;
-    const response = token ? await getCurrentUser(token) : null;
-
-    if (response != null) {
-      console.log("i was here: visibleTask");
-      updateUserSession(userSession, response, true, token);
-    }
+    updateUserSession(userSession, authCookies.username, authCookies.image, true, authCookies.authToken);
+    console.log("Auth successful");
   });
 
   useContextProvider(UserSessionContext, userSession);

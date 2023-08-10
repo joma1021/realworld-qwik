@@ -1,5 +1,4 @@
 import type { UserSessionStore } from "~/components/auth/auth-provider";
-import type { UserData } from "~/models/user";
 
 export const validateInput = (input: string) => {
   if (input == "") return true;
@@ -8,16 +7,13 @@ export const validateInput = (input: string) => {
 
 export const updateUserSession = (
   userSession: UserSessionStore,
-  user: UserData | null,
+  username: string,
+  image: string | undefined,
   isLoggedIn: boolean,
   authToken: string
 ) => {
-  userSession.user = user;
+  userSession.username = username;
+  userSession.image = image;
   userSession.isLoggedIn = isLoggedIn;
   userSession.authToken = authToken;
-};
-
-export const setUserSessionToken = (userSession: UserSessionStore, isLoggedIn: boolean, authToken: string) => {
-  userSession.authToken = authToken;
-  userSession.isLoggedIn = isLoggedIn;
 };

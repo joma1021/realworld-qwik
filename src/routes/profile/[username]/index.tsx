@@ -73,7 +73,7 @@ export default component$(() => {
                   <h4>{profile.username}</h4>
                   <p>{profile.bio}</p>
 
-                  {profile.username == userSession.user?.username ? (
+                  {profile.username == userSession.username ? (
                     <button
                       class="btn btn-sm btn-outline-secondary action-btn"
                       onClick$={$(() => navigate("/settings"))}

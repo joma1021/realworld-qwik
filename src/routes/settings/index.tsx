@@ -1,9 +1,10 @@
-import { component$, useSignal, $, useContext } from "@builder.io/qwik";
-import { clearToken } from "~/common/storage";
+import { component$, useSignal, $, useContext, useResource$, Resource } from "@builder.io/qwik";
 import { updateUserSession } from "~/common/helpers";
 import type { UserSessionStore } from "~/components/auth/auth-provider";
 import { UserSessionContext } from "~/components/auth/auth-provider";
 import { useNavigate } from "@builder.io/qwik-city";
+import { clearAuthToken, getCurrentUser } from "~/services/auth-service";
+import type { UserData } from "~/models/user";
 
 export default component$(() => {
   const isLoading = useSignal(false);
@@ -13,12 +14,16 @@ export default component$(() => {
   const handleLogout = $(async () => {
     isLoading.value = true;
 
-    clearToken();
-    updateUserSession(userSession, null, false, "");
+    await clearAuthToken();
+    updateUserSession(userSession, "", "", false, "");
 
     console.log("Logout successful");
     navigate("/");
     isLoading.value = false;
+  });
+
+  const currentUser = useResource$<UserData>(() => {
+    return getCurrentUser(userSession.authToken);
   });
 
   return (
@@ -32,46 +37,55 @@ export default component$(() => {
               <li>Not implemented yet</li>
             </ul>
 
-            <form>
-              <fieldset>
-                <fieldset class="form-group">
-                  <input
-                    class="form-control"
-                    type="text"
-                    placeholder="URL of profile picture"
-                    value={userSession.user?.image}
-                  />
-                </fieldset>
-                <fieldset class="form-group">
-                  <input
-                    class="form-control form-control-lg"
-                    type="text"
-                    placeholder="Your Name"
-                    value={userSession.user?.username}
-                  />
-                </fieldset>
-                <fieldset class="form-group">
-                  <textarea
-                    class="form-control form-control-lg"
-                    rows={8}
-                    placeholder="Short bio about you"
-                    value={userSession.user?.bio}
-                  ></textarea>
-                </fieldset>
-                <fieldset class="form-group">
-                  <input
-                    class="form-control form-control-lg"
-                    type="text"
-                    placeholder="Email"
-                    value={userSession.user?.email}
-                  />
-                </fieldset>
-                <fieldset class="form-group">
-                  <input class="form-control form-control-lg" type="password" placeholder="New Password" />
-                </fieldset>
-                <button class="btn btn-lg btn-primary pull-xs-right">Update Settings</button>
-              </fieldset>
-            </form>
+            <Resource
+              value={currentUser}
+              onPending={() => <div>Loading User-Data...</div>}
+              onRejected={(reason) => <div>Error: {reason}</div>}
+              onResolved={(currentUser) => (
+                <form>
+                  <fieldset>
+                    <fieldset class="form-group">
+                      <input
+                        class="form-control"
+                        type="text"
+                        placeholder="URL of profile picture"
+                        value={currentUser.image}
+                      />
+                    </fieldset>
+                    <fieldset class="form-group">
+                      <input
+                        class="form-control form-control-lg"
+                        type="text"
+                        placeholder="Your Name"
+                        value={currentUser.username}
+                      />
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                      <textarea
+                        class="form-control form-control-lg"
+                        rows={8}
+                        placeholder="Short bio about you"
+                        value={currentUser.bio}
+                      ></textarea>
+                    </fieldset>
+                    <fieldset class="form-group">
+                      <input
+                        class="form-control form-control-lg"
+                        type="text"
+                        placeholder="Email"
+                        value={currentUser.email}
+                      />
+                    </fieldset>
+
+                    <fieldset class="form-group">
+                      <input class="form-control form-control-lg" type="password" placeholder="New Password" />
+                    </fieldset>
+                    <button class="btn btn-lg btn-primary pull-xs-right">Update Settings</button>
+                  </fieldset>
+                </form>
+              )}
+            />
             <hr />
             <button class="btn btn-outline-danger" onClick$={handleLogout} disabled={isLoading.value}>
               Or click here to logout.
