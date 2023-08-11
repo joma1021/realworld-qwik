@@ -5,7 +5,7 @@ import type { UserSessionStore } from "~/components/auth/auth-provider";
 import { UserSessionContext } from "~/components/auth/auth-provider";
 import AuthError from "~/components/errors/auth-error";
 import type { LoginCredentials } from "~/models/auth";
-import { login, setAuthCookies } from "~/services/auth-service";
+import { login } from "~/services/auth-service";
 
 export interface LoginStore {
   hasError: boolean;
@@ -42,6 +42,7 @@ export default component$(() => {
       email: email,
       password: password,
     };
+    console.log("i tried login");
     const response = await login(credentials);
     const data = await response.json();
 
@@ -49,7 +50,6 @@ export default component$(() => {
       registerStore.hasError = true;
       registerStore.errorMessages = data.errors;
     } else {
-      await setAuthCookies(data.user);
       updateUserSession(userSession, data.user.username, data.user.image, true, data.user.token);
       console.log("Login successful");
       navigate("/");

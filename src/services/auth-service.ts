@@ -1,23 +1,28 @@
+import { BASE_URL } from "~/common/api";
 import { getHeaders } from "~/common/headers";
 import type { LoginCredentials, RegisterCredentials } from "~/models/auth";
 import type { UserData } from "~/models/user";
 
 export async function login(credentials: LoginCredentials) {
-  return fetch("https://api.realworld.io/api/users/login", {
+  const params = new URLSearchParams({
+    path: "/login",
+  });
+  return fetch("/middleware/auth?" + params, {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({ user: credentials }),
   });
 }
+
 export async function register(credentials: RegisterCredentials) {
-  return fetch("https://api.realworld.io/api/users", {
+  return fetch("/middleware/auth?", {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({ user: credentials }),
   });
 }
 export async function getCurrentUser(token: string): Promise<UserData> {
-  return fetch("https://api.realworld.io/api/user", {
+  return fetch(`${BASE_URL}/user`, {
     method: "GET",
     headers: getHeaders(token),
   })
@@ -26,7 +31,7 @@ export async function getCurrentUser(token: string): Promise<UserData> {
 }
 
 export async function updateUser(user: unknown, token: string) {
-  return fetch("https://api.realworld.io/api/user", {
+  return fetch(`${BASE_URL}/user`, {
     method: "PUT",
     headers: getHeaders(token),
     body: JSON.stringify({ user }),

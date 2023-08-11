@@ -1,22 +1,31 @@
 import type { CookieOptions, RequestHandler } from "@builder.io/qwik-city";
+import { BASE_URL } from "~/common/api";
+import { getHeaders } from "~/common/headers";
 
-export const onPost: RequestHandler = async ({ parseBody, send, cookie }) => {
-  const body = (await parseBody()) as any;
-  const responseError = new Response("Missing token", { status: 401 });
+export const onPost: RequestHandler = async ({ send, cookie, parseBody, url }) => {
+  const body = await parseBody();
 
-  if (!body?.token) {
-    send(responseError);
+  const response = await fetch(`${BASE_URL}/users${url.searchParams.get("path") ?? ""}`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(body),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const response = new Response(JSON.stringify(data), { status: 401 });
+    send(response);
+    return;
+  } else {
+    const cookieOptions: CookieOptions = { httpOnly: true, maxAge: [1, "days"], path: "/" };
+    cookie.set("authToken", data.user.token, cookieOptions);
+    cookie.set("username", data.user.username, cookieOptions);
+    cookie.set("image", data.user.image, cookieOptions);
+    const response = new Response(JSON.stringify(data), { status: 200 });
+    send(response);
     return;
   }
-
-  const cookieOptions: CookieOptions = { httpOnly: true, maxAge: [1, "days"], path: "/" };
-  cookie.set("authToken", body.token, cookieOptions);
-  cookie.set("username", body.username, cookieOptions);
-  cookie.set("image", body.image, cookieOptions);
-
-  const response = new Response("Auth-Token stored", { status: 200 });
-  send(response);
-  return;
 };
 
 export const onDelete: RequestHandler = async ({ send, cookie }) => {
@@ -25,7 +34,7 @@ export const onDelete: RequestHandler = async ({ send, cookie }) => {
   cookie.delete("username", cookieOptions);
   cookie.delete("image", cookieOptions);
 
-  const response = new Response("Auth-Token deleted", { status: 200 });
+  const response = new Response("Auth-Cookies deleted", { status: 200 });
   send(response);
   return;
 };

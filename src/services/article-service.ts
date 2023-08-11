@@ -34,6 +34,7 @@ export async function getGlobalArticles(
         offset: `${offset}`,
       });
   console.log("FETCH", `${BASE_URL}/articles?` + searchParams);
+
   try {
     const response = await fetch(`${BASE_URL}/articles?` + searchParams, {
       method: "GET",
@@ -133,4 +134,27 @@ export async function getArticle(slug: string, controller?: AbortController): Pr
   } catch (e) {
     return Promise.reject("Error occurred while fetching data");
   }
+}
+
+export async function createArticle(article: ArticleData): Promise<Response> {
+  return fetch(`${BASE_URL}/api/articles`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify({ article }),
+  });
+}
+
+export async function updateArticle(slug: string, article: ArticleData): Promise<Response> {
+  return fetch(`${BASE_URL}/api/articles/${slug}`, {
+    method: "PUT",
+    headers: getHeaders(),
+    body: JSON.stringify({ article }),
+  });
+}
+
+export async function deleteArticle(slug: string): Promise<Response> {
+  return fetch(`${BASE_URL}/articles/${slug}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
 }
