@@ -1,14 +1,14 @@
 import { Resource, component$, useContext, useResource$, useStore, $ } from "@builder.io/qwik";
 import { useLocation, useNavigate } from "@builder.io/qwik-city";
-import type { UserSessionStore } from "~/components/auth/auth-provider";
-import { UserSessionContext } from "~/components/auth/auth-provider";
+import type { UserSessionStore } from "~/common/auth/auth-provider";
+import { UserSessionContext } from "~/common/auth/auth-provider";
 import ProfileTabs from "~/components/tabs/profile-tabs";
 import type { ArticlesDTO } from "~/models/article";
 import type { AuthorData } from "~/models/author";
 import { Tab } from "~/models/tab";
 import { getProfileArticles } from "~/services/article-service";
 import { getProfile } from "~/services/profile-service";
-import { Article } from "~/components/articles/article";
+import { ArticlePreview } from "~/components/articles/article-preview";
 
 export interface ProfileStore {
   activeTab: Tab;
@@ -113,7 +113,7 @@ export default component$(() => {
                   ) : (
                     <ul>
                       {articles.articles.map((article) => (
-                        <Article article={article} key={article.slug} />
+                        <ArticlePreview article={article} key={article.slug} />
                       ))}
                     </ul>
                   )}

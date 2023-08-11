@@ -1,7 +1,7 @@
 import { component$, useSignal, $, useContext, useResource$, Resource } from "@builder.io/qwik";
 import { updateUserSession } from "~/common/helpers";
-import type { UserSessionStore } from "~/components/auth/auth-provider";
-import { UserSessionContext } from "~/components/auth/auth-provider";
+import type { UserSessionStore } from "~/common/auth/auth-provider";
+import { UserSessionContext } from "~/common/auth/auth-provider";
 import { useNavigate } from "@builder.io/qwik-city";
 import { clearAuthToken, getCurrentUser } from "~/services/auth-service";
 import type { UserData } from "~/models/user";

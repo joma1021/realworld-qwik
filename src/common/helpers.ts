@@ -1,4 +1,4 @@
-import type { UserSessionStore } from "~/components/auth/auth-provider";
+import type { UserSessionStore } from "~/common/auth/auth-provider";
 
 export const validateInput = (input: string) => {
   if (input == "") return true;

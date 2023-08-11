@@ -3,8 +3,8 @@ import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import Comments from "~/components/comments/comments";
 import type { ArticleData } from "~/models/article";
 import { getArticle } from "~/services/article-service";
-import type { UserSessionStore } from "~/components/auth/auth-provider";
-import { UserSessionContext } from "~/components/auth/auth-provider";
+import type { UserSessionStore } from "~/common/auth/auth-provider";
+import { UserSessionContext } from "~/common/auth/auth-provider";
 
 export default component$(() => {
   const userSession = useContext<UserSessionStore>(UserSessionContext);

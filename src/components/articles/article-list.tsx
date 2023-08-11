@@ -2,10 +2,10 @@ import { Resource, component$, useContext, useResource$, useSignal, useTask$ } f
 import type { ArticlesDTO } from "~/models/article";
 import { getGlobalArticles, getYourArticles } from "~/services/article-service";
 import type { OverviewStore } from "./article-overview";
-import type { UserSessionStore } from "../auth/auth-provider";
-import { UserSessionContext } from "../auth/auth-provider";
+import type { UserSessionStore } from "../../common/auth/auth-provider";
+import { UserSessionContext } from "../../common/auth/auth-provider";
 import { Tab } from "~/models/tab";
-import { Article } from "./article";
+import { ArticlePreview } from "./article-preview";
 
 interface ArticleListProps {
   overviewStore: OverviewStore;
@@ -46,7 +46,7 @@ export const ArticleList = component$((props: ArticleListProps) => {
             ) : (
               <ul>
                 {articles.articles.map((article) => (
-                  <Article article={article} key={article.slug} />
+                  <ArticlePreview article={article} key={article.slug} />
                 ))}
               </ul>
             )}

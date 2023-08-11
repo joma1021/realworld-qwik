@@ -2,7 +2,7 @@ import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import type { ArticleData } from "~/models/article";
 
-export const Article = component$((props: { article: ArticleData; key: string }) => {
+export const ArticlePreview = component$((props: { article: ArticleData; key: string }) => {
   return (
     <div class="article-preview" key={props.key}>
       <div class="article-meta">

@@ -1,8 +1,8 @@
 import { Resource, component$, useContext, useResource$, $, useStore } from "@builder.io/qwik";
 import type { CommentData } from "~/models/comment";
 
-import type { UserSessionStore } from "~/components/auth/auth-provider";
-import { UserSessionContext } from "~/components/auth/auth-provider";
+import type { UserSessionStore } from "~/common/auth/auth-provider";
+import { UserSessionContext } from "~/common/auth/auth-provider";
 import { Link } from "@builder.io/qwik-city";
 import { validateInput } from "~/common/helpers";
 import { createComment, deleteComment, getComments } from "~/services/comment-service";

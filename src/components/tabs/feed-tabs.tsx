@@ -3,8 +3,8 @@ import { component$, useTask$, useContext } from "@builder.io/qwik";
 import { Tab } from "~/models/tab";
 import type { OverviewStore } from "../articles/article-overview";
 import { Link } from "@builder.io/qwik-city";
-import type { UserSessionStore } from "../auth/auth-provider";
-import { UserSessionContext } from "../auth/auth-provider";
+import type { UserSessionStore } from "../../common/auth/auth-provider";
+import { UserSessionContext } from "../../common/auth/auth-provider";
 
 interface FeedTabsProps {
   overviewStore: OverviewStore;
