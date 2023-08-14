@@ -3,7 +3,7 @@ import { Link, useNavigate } from "@builder.io/qwik-city";
 import { updateUserSession, validateInput } from "~/common/helpers";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
-import AuthError from "~/components/errors/auth-error";
+import AuthError from "~/components/errors/form-error";
 import type { LoginCredentials } from "~/models/auth";
 import { login } from "~/services/auth-service";
 
@@ -42,7 +42,6 @@ export default component$(() => {
       email: email,
       password: password,
     };
-    console.log("i tried login");
     const response = await login(credentials);
     const data = await response.json();
 

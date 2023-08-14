@@ -1,10 +1,10 @@
 import { component$ } from "@builder.io/qwik";
 
-interface AuthErrorProps {
+interface FormErrorProps {
   errors: { [key: string]: string[] };
 }
 
-export default component$((props: AuthErrorProps) => {
+export default component$((props: FormErrorProps) => {
   return (
     <ul class="error-messages">
       {Object.entries(props.errors).map(([field, fieldErrors]) =>

@@ -2,7 +2,7 @@ import { Resource, component$, useContext, useResource$, $ } from "@builder.io/q
 import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import Comments from "~/components/comments/comments";
 import type { ArticleData } from "~/models/article";
-import { getArticle } from "~/services/article-service";
+import { deleteArticle, getArticle } from "~/services/article-service";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
 
@@ -15,7 +15,12 @@ export default component$(() => {
     const controller = new AbortController();
     cleanup(() => controller.abort());
     console.log("call article fetch");
-    return getArticle(slug, controller);
+    return getArticle(slug, userSession.authToken, controller);
+  });
+
+  const onDeleteArticle = $(async () => {
+    const response = await deleteArticle(userSession.authToken, slug);
+    if (response.ok) navigate("/");
   });
 
   return (
@@ -61,13 +66,13 @@ export default component$(() => {
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-secondary">
+                    <button class="btn btn-sm btn-outline-secondary" onClick$={() => navigate(`/editor/${slug}`)}>
                       <i class="ion-edit"></i> Edit Article
                     </button>
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-danger">
+                    <button class="btn btn-sm btn-outline-danger" onClick$={onDeleteArticle}>
                       <i class="ion-trash-a"></i> Delete Article
                     </button>
                   )}
@@ -124,13 +129,13 @@ export default component$(() => {
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-secondary">
+                    <button class="btn btn-sm btn-outline-secondary" onClick$={() => navigate(`/editor/${slug}`)}>
                       <i class="ion-edit"></i> Edit Article
                     </button>
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-danger">
+                    <button class="btn btn-sm btn-outline-danger" onClick$={onDeleteArticle}>
                       <i class="ion-trash-a"></i> Delete Article
                     </button>
                   )}

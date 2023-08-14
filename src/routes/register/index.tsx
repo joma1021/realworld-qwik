@@ -2,7 +2,7 @@ import { component$, $, useStore, useContext } from "@builder.io/qwik";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 import { updateUserSession, validateInput } from "~/common/helpers";
 import { UserSessionContext, type UserSessionStore } from "~/common/auth/auth-provider";
-import AuthError from "~/components/errors/auth-error";
+import AuthError from "~/components/errors/form-error";
 import type { RegisterCredentials } from "~/models/auth";
 import { register } from "~/services/auth-service";
 

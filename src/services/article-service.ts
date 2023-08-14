@@ -1,6 +1,6 @@
 import { BASE_URL } from "~/common/api";
 import { getHeaders } from "~/common/headers";
-import type { ArticleData, ArticlesDTO } from "~/models/article";
+import type { ArticleData, ArticlesDTO, EditArticleData } from "~/models/article";
 import { Tab } from "~/models/tab";
 
 export async function getTags(): Promise<string[]> {
@@ -117,13 +117,13 @@ export async function getProfileArticles(
   }
 }
 
-export async function getArticle(slug: string, controller?: AbortController): Promise<ArticleData> {
+export async function getArticle(slug: string, token?: string, controller?: AbortController): Promise<ArticleData> {
   console.log("FETCH", `${BASE_URL}/articles/${slug}`);
   try {
     const response = await fetch(`${BASE_URL}/articles/${slug}`, {
       method: "GET",
       signal: controller?.signal,
-      headers: getHeaders(),
+      headers: getHeaders(token),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
@@ -136,25 +136,25 @@ export async function getArticle(slug: string, controller?: AbortController): Pr
   }
 }
 
-export async function createArticle(article: ArticleData): Promise<Response> {
-  return fetch(`${BASE_URL}/api/articles`, {
+export async function createArticle(token: string, article: EditArticleData): Promise<Response> {
+  return fetch(`${BASE_URL}/articles`, {
     method: "POST",
-    headers: getHeaders(),
+    headers: getHeaders(token),
     body: JSON.stringify({ article }),
   });
 }
 
-export async function updateArticle(slug: string, article: ArticleData): Promise<Response> {
-  return fetch(`${BASE_URL}/api/articles/${slug}`, {
+export async function updateArticle(token: string, slug: string, article: EditArticleData): Promise<Response> {
+  return await fetch(`${BASE_URL}/articles/${slug}`, {
     method: "PUT",
-    headers: getHeaders(),
+    headers: getHeaders(token),
     body: JSON.stringify({ article }),
   });
 }
 
-export async function deleteArticle(slug: string): Promise<Response> {
+export async function deleteArticle(token: string, slug: string): Promise<Response> {
   return fetch(`${BASE_URL}/articles/${slug}`, {
     method: "DELETE",
-    headers: getHeaders(),
+    headers: getHeaders(token),
   });
 }

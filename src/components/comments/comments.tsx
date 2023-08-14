@@ -46,12 +46,8 @@ export default component$((props: { slug: string }) => {
   });
 
   const onDeleteComment = $(async (commentId: number) => {
-    try {
-      await deleteComment(props.slug, commentId, userSession.authToken);
-      commentStore.refreshComments = true;
-    } catch (e) {
-      return;
-    }
+    const response = await deleteComment(props.slug, commentId, userSession.authToken);
+    if (response.ok) commentStore.refreshComments = true;
   });
 
   return (
