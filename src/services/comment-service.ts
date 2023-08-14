@@ -21,7 +21,7 @@ export async function getComments(slug: string, token: string, controller?: Abor
   }
 }
 
-export async function createComment(slug: string, body: string, token: string): Promise<CommentData> {
+export async function createComment(slug: string, body: string, token: string): Promise<Response> {
   return fetch(`${BASE_URL}/articles/${slug}/comments`, {
     method: "POST",
     headers: getHeaders(token),
@@ -30,12 +30,7 @@ export async function createComment(slug: string, body: string, token: string): 
         body,
       },
     }),
-  })
-    .then((res) => res.json())
-    .then((res) => res.comment)
-    .catch((e) => {
-      throw new Error(e);
-    });
+  });
 }
 
 export async function deleteComment(slug: string, id: number, token: string): Promise<Response> {

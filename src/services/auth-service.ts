@@ -30,13 +30,13 @@ export async function getCurrentUser(token: string): Promise<UserData> {
     .then((res) => res.user);
 }
 
-export async function updateUser(user: unknown, token: string) {
-  return fetch(`${BASE_URL}/user`, {
-    method: "PUT",
-    headers: getHeaders(token),
-    body: JSON.stringify({ user }),
-  });
-}
+// export async function updateUser(user: unknown, token: string) {
+//   return fetch(`${BASE_URL}/user`, {
+//     method: "PUT",
+//     headers: getHeaders(token),
+//     body: JSON.stringify({ user }),
+//   });
+// }
 
 export async function setAuthCookies(user: UserData) {
   await fetch("/middleware/auth", {
