@@ -80,9 +80,9 @@ export default component$(() => {
                       &nbsp; Edit Profile Settings
                     </button>
                   ) : (
-                    <button class="btn btn-sm btn-outline-secondary action-btn">
+                    <button class={`btn btn-sm btn-${!profile.following ? "outline-" : ""}secondary action-btn`}>
                       <i class="ion-plus-round"></i>
-                      &nbsp; {`${profile.following ? "Unfollow" : "Folloe"} ${profile.username}`}
+                      &nbsp; {`${profile.following ? "Unfollow" : "Follow"} ${profile.username}`}
                     </button>
                   )}
                 </div>

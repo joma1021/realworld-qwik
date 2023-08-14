@@ -16,7 +16,7 @@ export const ArticlePreview = component$((props: { article: ArticleData; key: st
           </a>
           <span class="date">{props.article.createdAt}</span>
         </div>
-        <button class="btn btn-outline-primary btn-sm pull-xs-right">
+        <button class={`btn btn-${!props.article.favorited ? "outline-" : ""}primary btn-sm pull-xs-right`}>
           <i class="ion-heart"></i> {props.article.favoritesCount}
         </button>
       </div>

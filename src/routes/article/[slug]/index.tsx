@@ -47,21 +47,23 @@ export default component$(() => {
                   </div>
                   {userSession.username != article.author.username && (
                     <button
-                      class="btn btn-sm btn-outline-secondary"
+                      class={`btn btn-sm btn-${!article.author.following ? "outline-" : ""}secondary`}
                       onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
                     >
                       <i class="ion-plus-round"></i>
-                      &nbsp; Follow {article.author.username} <span class="counter"></span>
+                      &nbsp; {article.author.following ? "Unfollow" : "Follow"} {article.author.username}{" "}
+                      <span class="counter"></span>
                     </button>
                   )}
                   &nbsp;&nbsp;
                   {userSession.username != article.author.username && (
                     <button
-                      class="btn btn-sm btn-outline-primary"
+                      class={`btn btn-sm btn-${!article.favorited ? "outline-" : ""}primary`}
                       onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
                     >
                       <i class="ion-heart"></i>
-                      &nbsp; Favorite Article <span class="counter">({article.favoritesCount})</span>
+                      &nbsp; {article.favorited ? "Unfavorite" : "Favorite"} Article{" "}
+                      <span class="counter">({article.favoritesCount})</span>
                     </button>
                   )}
                   &nbsp;&nbsp;
@@ -110,21 +112,23 @@ export default component$(() => {
                   </div>
                   {userSession.username != article.author.username && (
                     <button
-                      class="btn btn-sm btn-outline-secondary"
+                      class={`btn btn-sm btn-${!article.author.following ? "outline-" : ""}secondary`}
                       onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
                     >
                       <i class="ion-plus-round"></i>
-                      &nbsp; Follow {article.author.username} <span class="counter"></span>
+                      &nbsp; {article.author.following ? "Unfollow" : "Follow"} {article.author.username}{" "}
+                      <span class="counter"></span>
                     </button>
                   )}
                   &nbsp;&nbsp;
                   {userSession.username != article.author.username && (
                     <button
-                      class="btn btn-sm btn-outline-primary"
+                      class={`btn btn-sm btn-${!article.favorited ? "outline-" : ""}primary`}
                       onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
                     >
                       <i class="ion-heart"></i>
-                      &nbsp; Favorite Article <span class="counter">({article.favoritesCount})</span>
+                      &nbsp; {article.favorited ? "Unfavorite" : "Favorite"} Article{" "}
+                      <span class="counter">({article.favoritesCount})</span>
                     </button>
                   )}
                   &nbsp;&nbsp;
