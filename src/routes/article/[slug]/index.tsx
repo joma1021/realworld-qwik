@@ -5,6 +5,8 @@ import type { ArticleData } from "~/models/article";
 import { deleteArticle, getArticle } from "~/services/article-service";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
+import { FavoriteButtonLarge } from "~/components/buttons/favorite-button";
+import { FollowButton } from "~/components/buttons/follow-button";
 
 export default component$(() => {
   const userSession = useContext<UserSessionStore>(UserSessionContext);
@@ -46,25 +48,11 @@ export default component$(() => {
                     <span class="date">{article.createdAt}</span>
                   </div>
                   {userSession.username != article.author.username && (
-                    <button
-                      class={`btn btn-sm btn-${!article.author.following ? "outline-" : ""}secondary`}
-                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
-                    >
-                      <i class="ion-plus-round"></i>
-                      &nbsp; {article.author.following ? "Unfollow" : "Follow"} {article.author.username}{" "}
-                      <span class="counter"></span>
-                    </button>
+                    <FollowButton following={article.author.following} username={article.author.username} />
                   )}
                   &nbsp;&nbsp;
                   {userSession.username != article.author.username && (
-                    <button
-                      class={`btn btn-sm btn-${!article.favorited ? "outline-" : ""}primary`}
-                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
-                    >
-                      <i class="ion-heart"></i>
-                      &nbsp; {article.favorited ? "Unfavorite" : "Favorite"} Article{" "}
-                      <span class="counter">({article.favoritesCount})</span>
-                    </button>
+                    <FavoriteButtonLarge favorite={article.favorited} count={article.favoritesCount} />
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
@@ -111,25 +99,11 @@ export default component$(() => {
                     <span class="date">{article.createdAt}</span>
                   </div>
                   {userSession.username != article.author.username && (
-                    <button
-                      class={`btn btn-sm btn-${!article.author.following ? "outline-" : ""}secondary`}
-                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
-                    >
-                      <i class="ion-plus-round"></i>
-                      &nbsp; {article.author.following ? "Unfollow" : "Follow"} {article.author.username}{" "}
-                      <span class="counter"></span>
-                    </button>
+                    <FollowButton following={article.author.following} username={article.author.username} />
                   )}
                   &nbsp;&nbsp;
                   {userSession.username != article.author.username && (
-                    <button
-                      class={`btn btn-sm btn-${!article.favorited ? "outline-" : ""}primary`}
-                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
-                    >
-                      <i class="ion-heart"></i>
-                      &nbsp; {article.favorited ? "Unfavorite" : "Favorite"} Article{" "}
-                      <span class="counter">({article.favoritesCount})</span>
-                    </button>
+                    <FavoriteButtonLarge favorite={article.favorited} count={article.favoritesCount} />
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (

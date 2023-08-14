@@ -9,6 +9,7 @@ import { Tab } from "~/models/tab";
 import { getProfileArticles } from "~/services/article-service";
 import { getProfile } from "~/services/profile-service";
 import { ArticlePreview } from "~/components/articles/article-preview";
+import { FollowButton } from "~/components/buttons/follow-button";
 
 export interface ProfileStore {
   activeTab: Tab;
@@ -80,10 +81,7 @@ export default component$(() => {
                       &nbsp; Edit Profile Settings
                     </button>
                   ) : (
-                    <button class={`btn btn-sm btn-${!profile.following ? "outline-" : ""}secondary action-btn`}>
-                      <i class="ion-plus-round"></i>
-                      &nbsp; {`${profile.following ? "Unfollow" : "Follow"} ${profile.username}`}
-                    </button>
+                    <FollowButton following={profile.following} username={profile.username} />
                   )}
                 </div>
               )}
