@@ -18,7 +18,6 @@ export default component$(() => {
   const article = useResource$<ArticleData>(async ({ cleanup }) => {
     const controller = new AbortController();
     cleanup(() => controller.abort());
-    console.log("call article fetch");
     const article = await getArticle(slug, userSession.authToken, controller);
     following.value = article.author.following;
     favoriteStore.count = article.favoritesCount;

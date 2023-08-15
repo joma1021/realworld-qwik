@@ -1,5 +1,5 @@
 import type { QwikKeyboardEvent } from "@builder.io/qwik";
-import { component$, useStore, $, useContext } from "@builder.io/qwik";
+import { component$, useStore, $, useContext, useSignal } from "@builder.io/qwik";
 import { useNavigate } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
@@ -65,7 +65,6 @@ export default component$(() => {
   });
 
   const onRemoveTag = $((tag: string) => {
-    console.log("rm: " + tag);
     createArticleStore.newArticle.tagList = createArticleStore.newArticle.tagList.filter((t) => t != tag);
   });
 
@@ -141,7 +140,7 @@ export default component$(() => {
                   <div class="tag-list">
                     {createArticleStore.newArticle.tagList.map((tag) => (
                       <span class="tag-default tag-pill" key={tag}>
-                        <i class="ion-close-round" onClicks$={() => onRemoveTag(tag)}></i>
+                        <i class="ion-close-round" onClick$={() => onRemoveTag(tag)}></i>
                         {tag}
                       </span>
                     ))}

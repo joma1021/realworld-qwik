@@ -33,7 +33,6 @@ export default component$(() => {
   });
 
   const article = useResource$<ArticleData>(async () => {
-    console.log("call article fetch");
     const article = await getArticle(slug, userSession.authToken);
     editArticleStore.article = {
       tagList: article.tagList,
@@ -78,7 +77,6 @@ export default component$(() => {
   });
 
   const onRemoveTag = $((tag: string) => {
-    console.log("rm: " + tag);
     editArticleStore.article.tagList = editArticleStore.article.tagList.filter((t) => t != tag);
   });
 
@@ -92,7 +90,6 @@ export default component$(() => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.log(data);
         editArticleStore.hasError = true;
         data.status == "error"
           ? (editArticleStore.errorMessages = { ["Error: "]: [data.message] })
