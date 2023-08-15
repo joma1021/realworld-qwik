@@ -1,13 +1,13 @@
 import type { CookieOptions, RequestHandler } from "@builder.io/qwik-city";
 import { BASE_URL } from "~/common/api";
-import { getHeaders } from "~/common/headers";
+import { setHeaders } from "~/common/headers";
 
 export const onPost: RequestHandler = async ({ send, cookie, parseBody, url }) => {
   const body = await parseBody();
 
   const response = await fetch(`${BASE_URL}/users${url.searchParams.get("path") ?? ""}`, {
     method: "POST",
-    headers: getHeaders(),
+    headers: setHeaders(),
     body: JSON.stringify(body),
   });
 

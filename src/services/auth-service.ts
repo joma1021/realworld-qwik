@@ -1,5 +1,5 @@
 import { BASE_URL } from "~/common/api";
-import { getHeaders } from "~/common/headers";
+import { setHeaders } from "~/common/headers";
 import type { LoginCredentials, RegisterCredentials } from "~/models/auth";
 import type { UserData } from "~/models/user";
 
@@ -9,7 +9,7 @@ export async function login(credentials: LoginCredentials) {
   });
   return fetch("/middleware/auth?" + params, {
     method: "POST",
-    headers: getHeaders(),
+    headers: setHeaders(),
     body: JSON.stringify({ user: credentials }),
   });
 }
@@ -17,14 +17,14 @@ export async function login(credentials: LoginCredentials) {
 export async function register(credentials: RegisterCredentials) {
   return fetch("/middleware/auth?", {
     method: "POST",
-    headers: getHeaders(),
+    headers: setHeaders(),
     body: JSON.stringify({ user: credentials }),
   });
 }
 export async function getCurrentUser(token: string): Promise<UserData> {
   return fetch(`${BASE_URL}/user`, {
     method: "GET",
-    headers: getHeaders(token),
+    headers: setHeaders(token),
   })
     .then((res) => res.json())
     .then((res) => res.user);
@@ -41,7 +41,7 @@ export async function getCurrentUser(token: string): Promise<UserData> {
 export async function setAuthCookies(user: UserData) {
   await fetch("/middleware/auth", {
     method: "POST",
-    headers: getHeaders(),
+    headers: setHeaders(),
     body: JSON.stringify({ token: user.token, username: user.username, image: user.image }),
     credentials: "include",
   });
@@ -50,7 +50,7 @@ export async function setAuthCookies(user: UserData) {
 export async function clearAuthToken() {
   await fetch("/middleware/auth", {
     method: "DELETE",
-    headers: getHeaders(),
+    headers: setHeaders(),
     credentials: "include",
   });
 }

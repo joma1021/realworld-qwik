@@ -17,7 +17,11 @@ export const ArticlePreview = component$((props: { article: ArticleData; key: st
           </a>
           <span class="date">{props.article.createdAt}</span>
         </div>
-        <FavoriteButtonSmall favorite={props.article.favorited} count={props.article.favoritesCount} />
+        <FavoriteButtonSmall
+          favorite={props.article.favorited}
+          count={props.article.favoritesCount}
+          slug={props.article.slug}
+        />
       </div>
       <Link href={`/article/${props.article.slug}`} class="preview-link">
         <h1>{props.article.title}</h1>

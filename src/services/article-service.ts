@@ -1,5 +1,5 @@
 import { BASE_URL } from "~/common/api";
-import { getHeaders } from "~/common/headers";
+import { setHeaders } from "~/common/headers";
 import type { ArticleData, ArticlesDTO, EditArticleData } from "~/models/article";
 import { Tab } from "~/models/tab";
 
@@ -39,7 +39,7 @@ export async function getGlobalArticles(
     const response = await fetch(`${BASE_URL}/articles?` + searchParams, {
       method: "GET",
       signal: controller?.signal,
-      headers: getHeaders(),
+      headers: setHeaders(),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
@@ -66,7 +66,7 @@ export async function getYourArticles(
     const response = await fetch(`${BASE_URL}/articles/feed?` + searchParams, {
       method: "GET",
       signal: controller?.signal,
-      headers: getHeaders(token),
+      headers: setHeaders(token),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
@@ -105,7 +105,7 @@ export async function getProfileArticles(
     const response = await fetch(`${BASE_URL}/articles?` + searchParams, {
       method: "GET",
       signal: controller?.signal,
-      headers: getHeaders(token),
+      headers: setHeaders(token),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
@@ -123,7 +123,7 @@ export async function getArticle(slug: string, token?: string, controller?: Abor
     const response = await fetch(`${BASE_URL}/articles/${slug}`, {
       method: "GET",
       signal: controller?.signal,
-      headers: getHeaders(token),
+      headers: setHeaders(token),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
@@ -139,7 +139,7 @@ export async function getArticle(slug: string, token?: string, controller?: Abor
 export async function createArticle(token: string, article: EditArticleData): Promise<Response> {
   return fetch(`${BASE_URL}/articles`, {
     method: "POST",
-    headers: getHeaders(token),
+    headers: setHeaders(token),
     body: JSON.stringify({ article }),
   });
 }
@@ -147,7 +147,7 @@ export async function createArticle(token: string, article: EditArticleData): Pr
 export async function updateArticle(token: string, slug: string, article: EditArticleData): Promise<Response> {
   return await fetch(`${BASE_URL}/articles/${slug}`, {
     method: "PUT",
-    headers: getHeaders(token),
+    headers: setHeaders(token),
     body: JSON.stringify({ article }),
   });
 }
@@ -155,6 +155,20 @@ export async function updateArticle(token: string, slug: string, article: EditAr
 export async function deleteArticle(token: string, slug: string): Promise<Response> {
   return fetch(`${BASE_URL}/articles/${slug}`, {
     method: "DELETE",
-    headers: getHeaders(token),
+    headers: setHeaders(token),
+  });
+}
+
+export async function favoriteArticle(token: string, slug: string): Promise<Response> {
+  return fetch(`${BASE_URL}/articles/${slug}/favorite`, {
+    method: "POST",
+    headers: setHeaders(token),
+  });
+}
+
+export async function unfavoriteArticle(token: string, slug: string): Promise<Response> {
+  return fetch(`${BASE_URL}/articles/${slug}/favorite`, {
+    method: "DELETE",
+    headers: setHeaders(token),
   });
 }
