@@ -3,8 +3,8 @@ import TagsSidebar from "../tags/tags-sidebar";
 import { ArticleList } from "./article-list";
 import FeedTabs from "../tabs/feed-tabs";
 import { Tab } from "~/models/tab";
-import type { UserSessionStore } from "../auth/auth-provider";
-import { UserSessionContext } from "../auth/auth-provider";
+import type { UserSessionStore } from "../../common/auth/auth-provider";
+import { UserSessionContext } from "../../common/auth/auth-provider";
 
 export interface OverviewStore {
   selectedTag: string;

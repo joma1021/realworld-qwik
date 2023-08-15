@@ -1,5 +1,5 @@
 import { BASE_URL } from "~/common/api";
-import { getHeaders } from "~/common/headers";
+import { setHeaders } from "~/common/headers";
 import type { CommentData } from "~/models/comment";
 
 export async function getComments(slug: string, token: string, controller?: AbortController): Promise<CommentData[]> {
@@ -8,7 +8,7 @@ export async function getComments(slug: string, token: string, controller?: Abor
     const response = await fetch(`${BASE_URL}/articles/${slug}/comments`, {
       method: "GET",
       signal: controller?.signal,
-      headers: getHeaders(token),
+      headers: setHeaders(token),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
@@ -21,26 +21,21 @@ export async function getComments(slug: string, token: string, controller?: Abor
   }
 }
 
-export async function createComment(slug: string, body: string, token: string): Promise<CommentData> {
+export async function createComment(slug: string, body: string, token: string): Promise<Response> {
   return fetch(`${BASE_URL}/articles/${slug}/comments`, {
     method: "POST",
-    headers: getHeaders(token),
+    headers: setHeaders(token),
     body: JSON.stringify({
       comment: {
         body,
       },
     }),
-  })
-    .then((res) => res.json())
-    .then((res) => res.comment)
-    .catch((e) => {
-      throw new Error(e);
-    });
+  });
 }
 
 export async function deleteComment(slug: string, id: number, token: string): Promise<Response> {
   return fetch(`${BASE_URL}/articles/${slug}/comments/${id}`, {
     method: "DELETE",
-    headers: getHeaders(token),
+    headers: setHeaders(token),
   });
 }

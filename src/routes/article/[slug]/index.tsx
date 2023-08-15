@@ -1,21 +1,33 @@
-import { Resource, component$, useContext, useResource$, $ } from "@builder.io/qwik";
+import { Resource, component$, useContext, useResource$, $, useSignal, useStore } from "@builder.io/qwik";
 import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import Comments from "~/components/comments/comments";
 import type { ArticleData } from "~/models/article";
-import { getArticle } from "~/services/article-service";
-import type { UserSessionStore } from "~/components/auth/auth-provider";
-import { UserSessionContext } from "~/components/auth/auth-provider";
+import { deleteArticle, getArticle } from "~/services/article-service";
+import type { UserSessionStore } from "~/common/auth/auth-provider";
+import { UserSessionContext } from "~/common/auth/auth-provider";
+import { FavoriteButtonLarge } from "~/components/buttons/favorite-button";
+import { FollowButton } from "~/components/buttons/follow-button";
 
 export default component$(() => {
   const userSession = useContext<UserSessionStore>(UserSessionContext);
   const slug = useLocation().params.slug;
   const navigate = useNavigate();
+  const following = useSignal(false);
+  const favoriteStore = useStore({ favorite: false, count: 0 });
 
-  const article = useResource$<ArticleData>(({ cleanup }) => {
+  const article = useResource$<ArticleData>(async ({ cleanup }) => {
     const controller = new AbortController();
     cleanup(() => controller.abort());
-    console.log("call article fetch");
-    return getArticle(slug, controller);
+    const article = await getArticle(slug, userSession.authToken, controller);
+    following.value = article.author.following;
+    favoriteStore.count = article.favoritesCount;
+    favoriteStore.favorite = article.favorited;
+    return article;
+  });
+
+  const onDeleteArticle = $(async () => {
+    const response = await deleteArticle(userSession.authToken, slug);
+    if (response.ok) navigate("/");
   });
 
   return (
@@ -41,33 +53,35 @@ export default component$(() => {
                     <span class="date">{article.createdAt}</span>
                   </div>
                   {userSession.username != article.author.username && (
-                    <button
-                      class="btn btn-sm btn-outline-secondary"
-                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
-                    >
-                      <i class="ion-plus-round"></i>
-                      &nbsp; Follow {article.author.username} <span class="counter"></span>
-                    </button>
+                    <FollowButton
+                      following={following.value}
+                      username={article.author.username}
+                      updateFollow$={async (follow) => {
+                        following.value = follow;
+                      }}
+                    />
                   )}
                   &nbsp;&nbsp;
                   {userSession.username != article.author.username && (
-                    <button
-                      class="btn btn-sm btn-outline-primary"
-                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
-                    >
-                      <i class="ion-heart"></i>
-                      &nbsp; Favorite Article <span class="counter">({article.favoritesCount})</span>
-                    </button>
+                    <FavoriteButtonLarge
+                      favorite={favoriteStore.favorite}
+                      count={favoriteStore.count}
+                      slug={slug}
+                      updateFavorite$={async (favorite, count) => {
+                        favoriteStore.favorite = favorite;
+                        favoriteStore.count = count;
+                      }}
+                    />
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-secondary">
+                    <button class="btn btn-sm btn-outline-secondary" onClick$={() => navigate(`/editor/${slug}`)}>
                       <i class="ion-edit"></i> Edit Article
                     </button>
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-danger">
+                    <button class="btn btn-sm btn-outline-danger" onClick$={onDeleteArticle}>
                       <i class="ion-trash-a"></i> Delete Article
                     </button>
                   )}
@@ -104,33 +118,35 @@ export default component$(() => {
                     <span class="date">{article.createdAt}</span>
                   </div>
                   {userSession.username != article.author.username && (
-                    <button
-                      class="btn btn-sm btn-outline-secondary"
-                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
-                    >
-                      <i class="ion-plus-round"></i>
-                      &nbsp; Follow {article.author.username} <span class="counter"></span>
-                    </button>
+                    <FollowButton
+                      following={following.value}
+                      username={article.author.username}
+                      updateFollow$={async (follow) => {
+                        following.value = follow;
+                      }}
+                    />
                   )}
                   &nbsp;&nbsp;
                   {userSession.username != article.author.username && (
-                    <button
-                      class="btn btn-sm btn-outline-primary"
-                      onClick$={userSession.isLoggedIn ? $(() => {}) : $(() => navigate("/register"))}
-                    >
-                      <i class="ion-heart"></i>
-                      &nbsp; Favorite Article <span class="counter">({article.favoritesCount})</span>
-                    </button>
+                    <FavoriteButtonLarge
+                      favorite={favoriteStore.favorite}
+                      count={favoriteStore.count}
+                      slug={slug}
+                      updateFavorite$={async (favorite, count) => {
+                        favoriteStore.favorite = favorite;
+                        favoriteStore.count = count;
+                      }}
+                    />
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-secondary">
+                    <button class="btn btn-sm btn-outline-secondary" onClick$={() => navigate(`/editor/${slug}`)}>
                       <i class="ion-edit"></i> Edit Article
                     </button>
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-danger">
+                    <button class="btn btn-sm btn-outline-danger" onClick$={onDeleteArticle}>
                       <i class="ion-trash-a"></i> Delete Article
                     </button>
                   )}

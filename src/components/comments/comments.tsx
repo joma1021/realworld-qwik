@@ -1,24 +1,22 @@
 import { Resource, component$, useContext, useResource$, $, useStore } from "@builder.io/qwik";
 import type { CommentData } from "~/models/comment";
 
-import type { UserSessionStore } from "~/components/auth/auth-provider";
-import { UserSessionContext } from "~/components/auth/auth-provider";
+import type { UserSessionStore } from "~/common/auth/auth-provider";
+import { UserSessionContext } from "~/common/auth/auth-provider";
 import { Link } from "@builder.io/qwik-city";
 import { validateInput } from "~/common/helpers";
 import { createComment, deleteComment, getComments } from "~/services/comment-service";
 
 export interface CommentStore {
   isLoading: boolean;
-  newComment: CommentData | null;
   refreshComments: boolean;
 }
 
 export default component$((props: { slug: string }) => {
   const userSession = useContext<UserSessionStore>(UserSessionContext);
-  const commentStore = useStore<CommentStore>({ isLoading: false, newComment: null, refreshComments: false });
+  const commentStore = useStore<CommentStore>({ isLoading: false, refreshComments: false });
 
   const comments = useResource$<CommentData[]>(({ track, cleanup }) => {
-    track(() => commentStore.newComment);
     track(() => commentStore.refreshComments);
     commentStore.refreshComments = false;
     const controller = new AbortController();
@@ -35,23 +33,20 @@ export default component$((props: { slug: string }) => {
       commentStore.isLoading = false;
       return;
     }
-    try {
-      commentStore.newComment = await createComment(props.slug, comment, userSession.authToken);
-    } catch (e) {
+
+    const response = await createComment(props.slug, comment, userSession.authToken);
+    if (!response.ok) {
       commentStore.isLoading = false;
       return;
     }
     commentStore.isLoading = false;
     event.target.comment.value = "";
+    commentStore.refreshComments = true;
   });
 
   const onDeleteComment = $(async (commentId: number) => {
-    try {
-      await deleteComment(props.slug, commentId, userSession.authToken);
-      commentStore.refreshComments = true;
-    } catch (e) {
-      return;
-    }
+    const response = await deleteComment(props.slug, commentId, userSession.authToken);
+    if (response.ok) commentStore.refreshComments = true;
   });
 
   return (

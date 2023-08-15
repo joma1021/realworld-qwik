@@ -17,3 +17,10 @@ export interface ArticlesDTO {
   articles: ArticleData[];
   articlesCount: number;
 }
+
+export interface EditArticleData {
+  title: string;
+  description: string;
+  body: string;
+  tagList: string[];
+}

@@ -2,7 +2,7 @@ import { component$, useStyles$ } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
 import styles from "./global.css?inline";
-import AuthProvider from "./components/auth/auth-provider";
+import AuthProvider from "./common/auth/auth-provider";
 
 export default component$(() => {
   /**

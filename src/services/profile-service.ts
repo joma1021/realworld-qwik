@@ -1,19 +1,14 @@
 import { BASE_URL } from "~/common/api";
-import { getHeaders } from "~/common/headers";
+import { setHeaders } from "~/common/headers";
 import type { AuthorData } from "~/models/author";
 
-export async function getProfile(
-  username: string,
-  token: string | undefined,
-  controller?: AbortController
-): Promise<AuthorData> {
+export async function getProfile(username: string, token: string, controller?: AbortController): Promise<AuthorData> {
   console.log("FETCH", `${BASE_URL}/${username}`);
-  console.log("token: " + token);
   try {
     const response = await fetch(`${BASE_URL}/profiles/${username}`, {
       method: "GET",
       signal: controller?.signal,
-      headers: getHeaders(token),
+      headers: setHeaders(token),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
@@ -25,4 +20,18 @@ export async function getProfile(
   } catch (e) {
     return Promise.reject("Error occurred while fetching data");
   }
+}
+
+export async function followUser(token: string, username: string): Promise<Response> {
+  return fetch(`${BASE_URL}/profiles/${username}/follow`, {
+    method: "POST",
+    headers: setHeaders(token),
+  });
+}
+
+export async function unfollowUser(token: string, username: string): Promise<Response> {
+  return fetch(`${BASE_URL}/profiles/${username}/follow`, {
+    method: "DELETE",
+    headers: setHeaders(token),
+  });
 }

@@ -1,8 +1,9 @@
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import type { ArticleData } from "~/models/article";
+import { FavoriteButtonSmall } from "../buttons/favorite-button";
 
-export const Article = component$((props: { article: ArticleData; key: string }) => {
+export const ArticlePreview = component$((props: { article: ArticleData; key: string }) => {
   return (
     <div class="article-preview" key={props.key}>
       <div class="article-meta">
@@ -16,9 +17,11 @@ export const Article = component$((props: { article: ArticleData; key: string })
           </a>
           <span class="date">{props.article.createdAt}</span>
         </div>
-        <button class="btn btn-outline-primary btn-sm pull-xs-right">
-          <i class="ion-heart"></i> {props.article.favoritesCount}
-        </button>
+        <FavoriteButtonSmall
+          favorite={props.article.favorited}
+          count={props.article.favoritesCount}
+          slug={props.article.slug}
+        />
       </div>
       <Link href={`/article/${props.article.slug}`} class="preview-link">
         <h1>{props.article.title}</h1>

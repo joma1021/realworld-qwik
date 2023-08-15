@@ -25,7 +25,7 @@ export default component$((props: TagSidebarProps) => {
                   class="tag-pill tag-default"
                   style="cursor: pointer;"
                   key={tag}
-                  onClick$={async () => await props.updateTag$(tag)}
+                  onClick$={() => props.updateTag$(tag)}
                 >
                   {tag}
                 </a>
