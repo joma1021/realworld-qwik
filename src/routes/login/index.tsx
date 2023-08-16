@@ -1,4 +1,5 @@
 import { component$, $, useStore, useContext } from "@builder.io/qwik";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 import { updateUserSession, validateInput } from "~/common/helpers";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
@@ -85,3 +86,7 @@ export default component$(() => {
     </div>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Conduit - Login",
+};

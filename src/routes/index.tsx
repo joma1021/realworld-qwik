@@ -23,11 +23,5 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "conduit with Qwik",
-  meta: [
-    {
-      name: "description",
-      content: "A place to share your knowledge.",
-    },
-  ],
+  title: "Conduit - Home",
 };

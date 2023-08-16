@@ -2,6 +2,7 @@ import { component$, useSignal, $, useContext, useResource$, Resource } from "@b
 import { updateUserSession } from "~/common/helpers";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { useNavigate } from "@builder.io/qwik-city";
 import { clearAuthToken, getCurrentUser } from "~/services/auth-service";
 import type { UserData } from "~/models/user";
@@ -96,3 +97,7 @@ export default component$(() => {
     </div>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Conduit - Settings",
+};

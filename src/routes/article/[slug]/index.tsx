@@ -1,4 +1,5 @@
 import { Resource, component$, useContext, useResource$, $, useSignal, useStore } from "@builder.io/qwik";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
 import Comments from "~/components/comments/comments";
 import type { ArticleData } from "~/models/article";
@@ -160,3 +161,7 @@ export default component$(() => {
     </>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Conduit - Article",
+};

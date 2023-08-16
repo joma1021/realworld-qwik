@@ -1,5 +1,6 @@
 import type { QwikKeyboardEvent } from "@builder.io/qwik";
-import { component$, useStore, $, useContext, useSignal } from "@builder.io/qwik";
+import { component$, useStore, $, useContext } from "@builder.io/qwik";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { useNavigate } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
@@ -162,3 +163,7 @@ export default component$(() => {
     </div>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Conduit - Editor",
+};
