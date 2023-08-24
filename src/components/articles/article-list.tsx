@@ -30,7 +30,7 @@ export const ArticleList = component$((props: ArticleListProps) => {
     if (props.overviewStore.activeTab == Tab.Your) {
       return getYourArticles(userSession.authToken, controller, pageNumber.value);
     } else {
-      return getGlobalArticles(controller, props.overviewStore.selectedTag, pageNumber.value);
+      return getGlobalArticles(controller, props.overviewStore.selectedTag, pageNumber.value, userSession.authToken);
     }
   });
   return (

@@ -20,7 +20,8 @@ export async function getTags(): Promise<string[]> {
 export async function getGlobalArticles(
   controller?: AbortController,
   tag?: string,
-  page?: number
+  page?: number,
+  token?: string
 ): Promise<ArticlesDTO> {
   const offset = page ? (page - 1) * 10 : 0;
   const searchParams = tag
@@ -39,7 +40,7 @@ export async function getGlobalArticles(
     const response = await fetch(`${BASE_URL}/articles?` + searchParams, {
       method: "GET",
       signal: controller?.signal,
-      headers: setHeaders(),
+      headers: setHeaders(token),
     });
     if (!response.ok) {
       return Promise.reject(response.statusText);
