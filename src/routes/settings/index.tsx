@@ -36,7 +36,6 @@ export default component$(() => {
 
   const handleSubmit = $(async (event: any) => {
     settingsStore.isLoading = true;
-    console.log("i was in onSubmit");
 
     const email = event.target.email.value;
     const image = event.target.image.value;
@@ -72,14 +71,13 @@ export default component$(() => {
     };
     if (bio) user.bio = bio;
     if (password) user.password = password;
-    console.log(user);
     const response = await updateUser(user, userSession.authToken);
-    const data = await response.json();
 
     if (!response.ok) {
       settingsStore.hasError = true;
-      settingsStore.errorMessages = data.errors;
+      settingsStore.errorMessages = { [""]: ["unknown error"] };
     } else {
+      const data = await response.json();
       updateUserSession(userSession, data.user.username, data.user.image, true, data.user.token);
 
       navigate("/");

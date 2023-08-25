@@ -14,8 +14,8 @@ export const onPost: RequestHandler = async ({ send, cookie, parseBody, url }) =
   const data = await response.json();
 
   if (!response.ok) {
-    const response = new Response(JSON.stringify(data), { status: 401 });
-    send(response);
+    const res = new Response(JSON.stringify(data), { status: response.status });
+    send(res);
     return;
   } else {
     const cookieOptions: CookieOptions = { httpOnly: true, maxAge: [1, "days"], path: "/" };

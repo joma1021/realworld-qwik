@@ -52,12 +52,18 @@ export default component$(() => {
       password: password,
     };
     const response = await register(credentials);
-    const data = await response.json();
-
     if (!response.ok) {
-      registerStore.hasError = true;
-      registerStore.errorMessages = data.errors;
-    } else {
+      if (response.status == 422) {
+        registerStore.hasError = true;
+        const data = await response.json();
+        data.status == "error"
+          ? (registerStore.errorMessages = { ["Error: "]: [data.message] })
+          : (registerStore.errorMessages = data.errors);
+      } else {
+        registerStore.hasError = true;
+        registerStore.errorMessages = { [""]: ["unknown error"] };
+      }
+      const data = await response.json();
       updateUserSession(userSession, data.user.username, data.user.image, true, data.user.token);
       console.log("Register successful");
       navigate("/");
