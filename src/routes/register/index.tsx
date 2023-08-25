@@ -63,6 +63,7 @@ export default component$(() => {
         registerStore.hasError = true;
         registerStore.errorMessages = { [""]: ["unknown error"] };
       }
+    } else {
       const data = await response.json();
       updateUserSession(userSession, data.user.username, data.user.image, true, data.user.token);
       console.log("Register successful");
