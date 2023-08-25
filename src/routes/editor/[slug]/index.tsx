@@ -91,10 +91,16 @@ export default component$(() => {
       const data = await response.json();
 
       if (!response.ok) {
-        editArticleStore.hasError = true;
-        data.status == "error"
-          ? (editArticleStore.errorMessages = { ["Error: "]: [data.message] })
-          : (editArticleStore.errorMessages = data.errors);
+        if (response.status == 422) {
+          editArticleStore.hasError = true;
+          const data = await response.json();
+          data.status == "error"
+            ? (editArticleStore.errorMessages = { ["Error: "]: [data.message] })
+            : (editArticleStore.errorMessages = data.errors);
+        } else {
+          editArticleStore.hasError = true;
+          editArticleStore.errorMessages = { [""]: ["unknown error"] };
+        }
       } else {
         navigate(`/article/${data.article.slug}`);
       }

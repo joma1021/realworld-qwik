@@ -5,3 +5,11 @@ export interface UserData {
   image: string;
   token: string;
 }
+
+export interface UpdateUser {
+  username: string;
+  email: string;
+  bio?: string;
+  image: string;
+  password?: string;
+}

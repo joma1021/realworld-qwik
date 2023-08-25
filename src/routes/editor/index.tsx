@@ -77,14 +77,19 @@ export default component$(() => {
     if (await validateArticle(newArticle)) {
       const response = await createArticle(userSession.authToken, newArticle);
 
-      const data = await response.json();
-
       if (!response.ok) {
-        createArticleStore.hasError = true;
-        data.status == "error"
-          ? (createArticleStore.errorMessages = { ["Error: "]: [data.message] })
-          : (createArticleStore.errorMessages = data.errors);
+        if (response.status == 422) {
+          createArticleStore.hasError = true;
+          const data = await response.json();
+          data.status == "error"
+            ? (createArticleStore.errorMessages = { ["Error: "]: [data.message] })
+            : (createArticleStore.errorMessages = data.errors);
+        } else {
+          createArticleStore.hasError = true;
+          createArticleStore.errorMessages = { [""]: ["unknown error"] };
+        }
       } else {
+        const data = await response.json();
         navigate(`/article/${data.article.slug}`);
       }
     }

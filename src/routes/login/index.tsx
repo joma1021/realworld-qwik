@@ -15,27 +15,27 @@ export interface LoginStore {
 }
 
 export default component$(() => {
-  const registerStore = useStore<LoginStore>({ hasError: false, errorMessages: { [""]: [""] }, isLoading: false });
+  const loginStore = useStore<LoginStore>({ hasError: false, errorMessages: { [""]: [""] }, isLoading: false });
   const navigate = useNavigate();
   const userSession = useContext<UserSessionStore>(UserSessionContext);
 
   const handleSubmit = $(async (event: any) => {
-    registerStore.isLoading = true;
+    loginStore.isLoading = true;
 
     const email = event.target.email.value;
     const password = event.target.password.value;
 
     if (validateInput(email)) {
-      registerStore.errorMessages = { [email]: ["email can't be blank"] };
-      registerStore.hasError = true;
-      registerStore.isLoading = false;
+      loginStore.errorMessages = { [email]: ["email can't be blank"] };
+      loginStore.hasError = true;
+      loginStore.isLoading = false;
       return;
     }
 
     if (validateInput(password)) {
-      registerStore.errorMessages = { [password]: ["password can't be blank"] };
-      registerStore.hasError = true;
-      registerStore.isLoading = false;
+      loginStore.errorMessages = { [password]: ["password can't be blank"] };
+      loginStore.hasError = true;
+      loginStore.isLoading = false;
       return;
     }
 
@@ -44,18 +44,25 @@ export default component$(() => {
       password: password,
     };
     const response = await login(credentials);
-    const data = await response.json();
-
     if (!response.ok) {
-      registerStore.hasError = true;
-      registerStore.errorMessages = data.errors;
+      if (response.status == 403 || response.status == 422) {
+        loginStore.hasError = true;
+        const data = await response.json();
+        data.status == "error"
+          ? (loginStore.errorMessages = { ["Error: "]: [data.message] })
+          : (loginStore.errorMessages = data.errors);
+      } else {
+        loginStore.hasError = true;
+        loginStore.errorMessages = { [""]: ["unknown error"] };
+      }
     } else {
+      const data = await response.json();
       updateUserSession(userSession, data.user.username, data.user.image, true, data.user.token);
       console.log("Login successful");
       navigate("/");
     }
 
-    registerStore.isLoading = false;
+    loginStore.isLoading = false;
   });
 
   return (
@@ -67,7 +74,7 @@ export default component$(() => {
             <p class="text-xs-center">
               <Link href="/register">Need an account?</Link>
             </p>
-            {registerStore.hasError && <AuthError errors={registerStore.errorMessages} />}
+            {loginStore.hasError && <AuthError errors={loginStore.errorMessages} />}
 
             <form onSubmit$={handleSubmit} preventdefault:submit>
               <fieldset class="form-group">
@@ -76,7 +83,7 @@ export default component$(() => {
               <fieldset class="form-group">
                 <input class="form-control form-control-lg" name="password" type="password" placeholder="Password" />
               </fieldset>
-              <button class="btn btn-lg btn-primary pull-xs-right" type="submit" disabled={registerStore.isLoading}>
+              <button class="btn btn-lg btn-primary pull-xs-right" type="submit" disabled={loginStore.isLoading}>
                 Sign in
               </button>
             </form>
