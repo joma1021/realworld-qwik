@@ -1,9 +1,9 @@
 # ![RealWorld Example App](logo.png)
 
-> ### qwik codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
+> ### [qwik](https://qwik.builder.io/) codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
 
-### [qwik](https://qwik.builder.io/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
+### [demo](https://demo.realworld.io/#/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
 
 
 This codebase was created to demonstrate a frintend application built with [Qwik City](https://qwik.builder.io/docs/qwikcity/) including CRUD operations, authentication, routing, pagination, and more.
