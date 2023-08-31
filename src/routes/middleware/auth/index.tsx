@@ -2,7 +2,7 @@ import type { CookieOptions, RequestHandler } from "@builder.io/qwik-city";
 import { BASE_URL } from "~/common/api";
 import { setHeaders } from "~/common/headers";
 
-export const onPost: RequestHandler = async ({ send, cookie, parseBody, url }) => {
+export const onPost: RequestHandler = async ({ send, cookie, parseBody, url, next }) => {
   const body = await parseBody();
 
   const response = await fetch(`${BASE_URL}/users${url.searchParams.get("path") ?? ""}`, {
@@ -16,7 +16,7 @@ export const onPost: RequestHandler = async ({ send, cookie, parseBody, url }) =
   if (!response.ok) {
     const res = new Response(JSON.stringify(data), { status: response.status });
     send(res);
-    return;
+    next();
   } else {
     const cookieOptions: CookieOptions = { httpOnly: true, maxAge: [1, "days"], path: "/" };
     cookie.set("authToken", data.user.token, cookieOptions);
@@ -24,7 +24,6 @@ export const onPost: RequestHandler = async ({ send, cookie, parseBody, url }) =
     cookie.set("image", data.user.image, cookieOptions);
     const response = new Response(JSON.stringify(data), { status: 200 });
     send(response);
-    return;
   }
 };
 
@@ -36,5 +35,4 @@ export const onDelete: RequestHandler = async ({ send, cookie }) => {
 
   const response = new Response("Auth-Cookies deleted", { status: 200 });
   send(response);
-  return;
 };
