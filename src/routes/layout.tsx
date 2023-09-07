@@ -16,8 +16,11 @@ export const onGet: RequestHandler = async ({ cacheControl, url, cookie, redirec
   // Protect Routes
   const authToken = cookie.get("authToken")?.value;
   const pathname = url.pathname;
-  if ((pathname == "/editor/" || pathname == "/settings/" || pathname.includes("/profile/")) && !authToken)
-    throw redirect(302, "/login");
+
+  if (!authToken) {
+    if (pathname === "/settings/") throw redirect(302, "/register");
+    if (pathname.includes("/editor/")) throw redirect(302, "/register");
+  }
 };
 
 export default component$(() => {
