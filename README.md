@@ -2,9 +2,7 @@
 
 > ### [qwik](https://qwik.builder.io/) codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
-
-### [demo](https://demo.realworld.io/#/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
-
+### [demo](https://realworld-qwik.vercel.app/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
 
 This codebase was created to demonstrate a frintend application built with [Qwik City](https://qwik.builder.io/docs/qwikcity/) including CRUD operations, authentication, routing, pagination, and more.
 
@@ -79,6 +77,7 @@ The production build will generate client and server modules by running both cli
 ```shell
 npm run build # or `yarn build`
 ```
+<<<<<<< HEAD
 
 ## Vercel Edge
 
@@ -123,3 +122,5 @@ Notice that you might need a [Vercel account](https://docs.Vercel.com/get-starte
 The project is ready to be deployed to Vercel. However, you will need to create a git repository and push the code to it.
 
 You can [deploy your site to Vercel](https://vercel.com/docs/concepts/deployments/overview) either via a Git provider integration or through the Vercel CLI.
+=======
+>>>>>>> main
