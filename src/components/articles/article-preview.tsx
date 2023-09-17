@@ -7,21 +7,16 @@ export const ArticlePreview = component$((props: { article: ArticleData; key: st
   return (
     <div class="article-preview" key={props.key}>
       <div class="article-meta">
-        {/* TODO: <Link> doesn't lead to a updated of userprofile / reload of page if switching between profiles even tough rout url updates. It may be a bug from qwik -> find solution*/}
-        <a href={`/profile/${props.article.author.username}`}>
+        <Link href={`/profile/${props.article.author.username}`}>
           <img src={`${props.article.author.image}`} />
-        </a>
+        </Link>
         <div class="info">
           <a href={`/profile/${props.article.author.username}`} class="author">
             {props.article.author.username}
           </a>
           <span class="date">{props.article.createdAt}</span>
         </div>
-        <FavoriteButtonSmall
-          favorite={props.article.favorited}
-          count={props.article.favoritesCount}
-          slug={props.article.slug}
-        />
+        <FavoriteButtonSmall favorite={props.article.favorited} count={props.article.favoritesCount} slug={props.article.slug} />
       </div>
       <Link href={`/article/${props.article.slug}`} class="preview-link">
         <h1>{props.article.title}</h1>

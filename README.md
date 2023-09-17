@@ -4,7 +4,7 @@
 
 ### [demo](https://realworld-qwik.vercel.app/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
 
-This codebase was created to demonstrate a frintend application built with [Qwik City](https://qwik.builder.io/docs/qwikcity/) including CRUD operations, authentication, routing, pagination, and more.
+This codebase was created to demonstrate a frontend application built with [Qwik City](https://qwik.builder.io/docs/qwikcity/) including CRUD operations, authentication, routing, pagination, and more.
 
 We've gone to great lengths to adhere to the [qwik](https://qwik.builder.io/docs/) community styleguides & best practices.
 
