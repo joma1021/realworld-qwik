@@ -19,18 +19,19 @@ export interface ProfileStore {
 
 export default component$(() => {
   const navigate = useNavigate();
-  const username = useLocation().params.username;
+  const { params } = useLocation();
   const userSession = useContext<UserSessionStore>(UserSessionContext);
   const profileStore = useStore<ProfileStore>({
     activeTab: Tab.MyArticles,
     pageNumber: 1,
   });
 
-  const profile = useResource$<AuthorData>(async ({ cleanup }) => {
+  const profile = useResource$<AuthorData>(async ({ cleanup, track }) => {
+    track(() => params.username);
     const token = userSession.authToken;
     const controller = new AbortController();
     cleanup(() => controller.abort());
-    return getProfile(username, token, controller);
+    return getProfile(params.username, token, controller);
   });
 
   const articles = useResource$<ArticlesDTO>(({ track, cleanup }) => {
@@ -40,21 +41,9 @@ export default component$(() => {
     cleanup(() => controller.abort());
 
     if (profileStore.activeTab == Tab.MyArticles) {
-      return getProfileArticles(
-        username,
-        profileStore.activeTab,
-        userSession.authToken,
-        controller,
-        profileStore.pageNumber
-      );
+      return getProfileArticles(params.username, profileStore.activeTab, userSession.authToken, controller, profileStore.pageNumber);
     } else {
-      return getProfileArticles(
-        username,
-        profileStore.activeTab,
-        userSession.authToken,
-        controller,
-        profileStore.pageNumber
-      );
+      return getProfileArticles(params.username, profileStore.activeTab, userSession.authToken, controller, profileStore.pageNumber);
     }
   });
 
@@ -74,10 +63,7 @@ export default component$(() => {
                   <p>{profile.bio}</p>
 
                   {profile.username == userSession.username ? (
-                    <button
-                      class="btn btn-sm btn-outline-secondary action-btn"
-                      onClick$={$(() => navigate("/settings"))}
-                    >
+                    <button class="btn btn-sm btn-outline-secondary action-btn" onClick$={$(() => navigate("/settings"))}>
                       <i class="ion-gear-a"></i>
                       &nbsp; Edit Profile Settings
                     </button>

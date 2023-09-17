@@ -11,15 +11,16 @@ import { FollowButton } from "~/components/buttons/follow-button";
 
 export default component$(() => {
   const userSession = useContext<UserSessionStore>(UserSessionContext);
-  const slug = useLocation().params.slug;
+  const { params } = useLocation();
   const navigate = useNavigate();
   const following = useSignal(false);
   const favoriteStore = useStore({ favorite: false, count: 0 });
 
-  const article = useResource$<ArticleData>(async ({ cleanup }) => {
+  const article = useResource$<ArticleData>(async ({ cleanup, track }) => {
+    track(() => params.slug);
     const controller = new AbortController();
     cleanup(() => controller.abort());
-    const article = await getArticle(slug, userSession.authToken, controller);
+    const article = await getArticle(params.slug, userSession.authToken, controller);
     following.value = article.author.following;
     favoriteStore.count = article.favoritesCount;
     favoriteStore.favorite = article.favorited;
@@ -27,7 +28,7 @@ export default component$(() => {
   });
 
   const onDeleteArticle = $(async () => {
-    const response = await deleteArticle(userSession.authToken, slug);
+    const response = await deleteArticle(userSession.authToken, params.slug);
     if (response.ok) navigate("/");
   });
 
@@ -67,7 +68,7 @@ export default component$(() => {
                     <FavoriteButtonLarge
                       favorite={favoriteStore.favorite}
                       count={favoriteStore.count}
-                      slug={slug}
+                      slug={params.slug}
                       updateFavorite$={async (favorite, count) => {
                         favoriteStore.favorite = favorite;
                         favoriteStore.count = count;
@@ -76,7 +77,7 @@ export default component$(() => {
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-secondary" onClick$={() => navigate(`/editor/${slug}`)}>
+                    <button class="btn btn-sm btn-outline-secondary" onClick$={() => navigate(`/editor/${params.slug}`)}>
                       <i class="ion-edit"></i> Edit Article
                     </button>
                   )}
@@ -132,7 +133,7 @@ export default component$(() => {
                     <FavoriteButtonLarge
                       favorite={favoriteStore.favorite}
                       count={favoriteStore.count}
-                      slug={slug}
+                      slug={params.slug}
                       updateFavorite$={async (favorite, count) => {
                         favoriteStore.favorite = favorite;
                         favoriteStore.count = count;
@@ -141,7 +142,7 @@ export default component$(() => {
                   )}
                   &nbsp;&nbsp;
                   {userSession.username == article.author.username && (
-                    <button class="btn btn-sm btn-outline-secondary" onClick$={() => navigate(`/editor/${slug}`)}>
+                    <button class="btn btn-sm btn-outline-secondary" onClick$={() => navigate(`/editor/${params.slug}`)}>
                       <i class="ion-edit"></i> Edit Article
                     </button>
                   )}
@@ -153,7 +154,7 @@ export default component$(() => {
                   )}
                 </div>
               </div>
-              <Comments slug={slug} />
+              <Comments slug={params.slug} />
             </div>
           </div>
         )}

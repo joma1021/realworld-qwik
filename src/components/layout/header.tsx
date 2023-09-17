@@ -38,14 +38,10 @@ export default component$(() => {
               </Link>
             </li>
             <li class="nav-item">
-              {/* TODO: <Link> doesn't lead to a updated of userprofile / reload of page if switching between profiles even tough rout url updates. It may be a bug from qwik -> find solution*/}
-              <a
-                class={`nav-link ${pathname.value.includes("profile") ? "active" : ""}`}
-                href={`/profile/${userSession.username}`}
-              >
+              <Link class={`nav-link ${pathname.value.includes("profile") ? "active" : ""}`} href={`/profile/${userSession.username}`}>
                 {userSession.image && <img width={25} height={25} src={userSession.image} class="user-pic" />}
                 {userSession.username}
-              </a>
+              </Link>
             </li>
           </ul>
         ) : (
