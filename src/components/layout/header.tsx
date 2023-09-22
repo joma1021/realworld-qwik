@@ -53,12 +53,12 @@ export default component$(() => {
             </li>
             <li class="nav-item">
               <Link class={`nav-link ${pathname.value === "/login/" ? "active" : ""}`} href="/login">
-                Sign In
+                Sign in
               </Link>
             </li>
             <li class="nav-item">
               <Link class={`nav-link ${pathname.value === "/register/" ? "active" : ""}`} href="/register">
-                Sign Up
+                Sign up
               </Link>
             </li>
           </ul>
