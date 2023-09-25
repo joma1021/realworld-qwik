@@ -77,3 +77,41 @@ The production build will generate client and server modules by running both cli
 ```shell
 npm run build # or `yarn build`
 ```
+
+## Express Server
+
+This app has a minimal [Express server](https://expressjs.com/) implementation. After running a full build, you can preview the build using the command:
+
+```
+npm run serve
+```
+
+Then visit [http://localhost:8080/](http://localhost:8080/)
+
+# Docker
+
+## Build image:
+
+```shell
+docker build -t realworld-qwik .
+```
+
+## Run docker:
+
+```shell
+docker run -p 4321:4321 realworld-qwik
+```
+
+## Start FE with BE:
+
+src/common/api.ts: export const BASE_URL = "http://realworld-backend:8080";
+
+```shell
+docker-compose up -d
+```
+
+## Add Example Data
+
+```shell
+docker exec -d realworld-qwik-realworld-backend-1 bash init.sh
+```
