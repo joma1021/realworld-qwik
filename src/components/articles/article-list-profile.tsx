@@ -1,5 +1,5 @@
 import { Resource, component$, useContext, useResource$, useStore } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { Link, useLocation } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
 import type { ArticlesDTO } from "~/models/article";
@@ -54,15 +54,13 @@ export const ArticleListProfile = component$((props: { username: string }) => {
                     .fill(null)
                     .map((_, i) => (
                       <li class={`page-item  ${i == profileStore.page - 1 ? "active" : ""}`} key={i}>
-                        <a
+                        <Link
                           class="page-link"
                           style="cursor: pointer;"
-                          onClick$={() => {
-                            profileStore.page = i + 1;
-                          }}
+                          href={`?filter=${profileStore.filter}&page=${i + 1}`}
                         >
                           {i + 1}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                 </ul>
