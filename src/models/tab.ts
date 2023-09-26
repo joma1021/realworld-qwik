@@ -1,7 +1,6 @@
-export enum Tab {
-  Your,
-  Global,
-  Tag,
-  MyArticles,
-  FavArticles,
-}
+export const Tab = {
+  Your: "your",
+  Global: "global",
+  My: "my",
+  Fav: "fav",
+};

@@ -1,36 +1,31 @@
-import { Resource, component$, useContext, useResource$, useSignal, useTask$ } from "@builder.io/qwik";
+import { Resource, component$, useContext, useResource$, useStore } from "@builder.io/qwik";
 import type { ArticlesDTO } from "~/models/article";
 import { getGlobalArticles, getYourArticles } from "~/services/article-service";
-import type { OverviewStore } from "./article-overview";
 import type { UserSessionStore } from "../../common/auth/auth-provider";
 import { UserSessionContext } from "../../common/auth/auth-provider";
-import { Tab } from "~/models/tab";
 import { ArticlePreview } from "./article-preview";
+import { Link, useLocation } from "@builder.io/qwik-city";
+import { Tab } from "~/models/tab";
 
-interface ArticleListProps {
-  overviewStore: OverviewStore;
-}
-
-export const ArticleList = component$((props: ArticleListProps) => {
-  const pageNumber = useSignal(1);
+export const ArticleList = component$(() => {
   const userSession = useContext<UserSessionStore>(UserSessionContext);
-
-  useTask$(({ track }) => {
-    track(() => props.overviewStore.selectedTag);
-    pageNumber.value = 1;
-  });
+  const { url } = useLocation();
+  const articleListStore = useStore({ filter: userSession.isLoggedIn ? Tab.Your : Tab.Global, page: Number(url.searchParams.get("page") ?? 1) });
 
   const articles = useResource$<ArticlesDTO>(({ track, cleanup }) => {
-    track(() => pageNumber.value);
-    track(() => props.overviewStore.selectedTag);
-    track(() => props.overviewStore.activeTab);
+    track(() => url);
+    const filter = url.searchParams.get("filter");
+    if (filter) articleListStore.filter = filter;
+    articleListStore.page = Number(url.searchParams.get("page") ?? 1);
     const controller = new AbortController();
     cleanup(() => controller.abort());
 
-    if (props.overviewStore.activeTab == Tab.Your) {
-      return getYourArticles(userSession.authToken, controller, pageNumber.value);
+    if (articleListStore.filter == Tab.Your) {
+      return getYourArticles(userSession.authToken, controller, articleListStore.page);
+    } else if (articleListStore.filter == Tab.Global) {
+      return getGlobalArticles(controller, articleListStore.page, userSession.authToken);
     } else {
-      return getGlobalArticles(controller, props.overviewStore.selectedTag, pageNumber.value, userSession.authToken);
+      return getGlobalArticles(controller, articleListStore.page, userSession.authToken, articleListStore.filter);
     }
   });
   return (
@@ -55,16 +50,10 @@ export const ArticleList = component$((props: ArticleListProps) => {
               {Array(Math.ceil(articles.articlesCount / 10))
                 .fill(null)
                 .map((_, i) => (
-                  <li class={`page-item  ${i == pageNumber.value - 1 ? "active" : ""}`} key={i}>
-                    <a
-                      class="page-link"
-                      style="cursor: pointer;"
-                      onClick$={() => {
-                        pageNumber.value = i + 1;
-                      }}
-                    >
+                  <li class={`page-item  ${i == articleListStore.page - 1 ? "active" : ""}`} key={i}>
+                    <Link class="page-link" style="cursor: pointer;" href={`/?filter=${articleListStore.filter}&page=${i + 1}`}>
                       {i + 1}
-                    </a>
+                    </Link>
                   </li>
                 ))}
             </ul>

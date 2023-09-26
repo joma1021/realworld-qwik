@@ -1,8 +1,10 @@
 import { component$, useContext } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import ArticleOverview from "../components/articles/article-overview";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
+import FeedTabs from "~/components/tabs/feed-tabs";
+import { ArticleList } from "~/components/articles/article-list";
+import TagsSidebar from "~/components/tags/tags-sidebar";
 
 export default component$(() => {
   const userSession = useContext<UserSessionStore>(UserSessionContext);
@@ -16,8 +18,16 @@ export default component$(() => {
           </div>
         </div>
       )}
+      <div class="container page">
+        <div class="row">
+          <div class="col-md-9">
+            <FeedTabs />
+            <ArticleList />
+          </div>
 
-      <ArticleOverview />
+          <TagsSidebar />
+        </div>
+      </div>
     </div>
   );
 });
