@@ -1,12 +1,8 @@
-import type { PropFunction } from "@builder.io/qwik";
 import { Resource, component$, useResource$ } from "@builder.io/qwik";
+import { Link } from "@builder.io/qwik-city";
 import { getTags } from "~/services/article-service";
 
-interface TagSidebarProps {
-  updateTag$: PropFunction<(tag: string) => void>;
-}
-
-export default component$((props: TagSidebarProps) => {
+export default component$(() => {
   const tags = useResource$<string[]>(() => {
     return getTags();
   });
@@ -21,14 +17,9 @@ export default component$((props: TagSidebarProps) => {
           onResolved={(tags) => (
             <div class="tag-list">
               {tags.map((tag) => (
-                <a
-                  class="tag-pill tag-default"
-                  style="cursor: pointer;"
-                  key={tag}
-                  onClick$={() => props.updateTag$(tag)}
-                >
+                <Link class="tag-pill tag-default" style="cursor: pointer;" key={tag} href={`/?filter=${tag}`}>
                   {tag}
-                </a>
+                </Link>
               ))}
             </div>
           )}

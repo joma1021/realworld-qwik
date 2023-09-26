@@ -17,18 +17,13 @@ export async function getTags(): Promise<string[]> {
     return Promise.reject("Error occurred while fetching data");
   }
 }
-export async function getGlobalArticles(
-  controller?: AbortController,
-  tag?: string,
-  page?: number,
-  token?: string
-): Promise<ArticlesDTO> {
+export async function getGlobalArticles(controller?: AbortController, page?: number, token?: string, filter?: string): Promise<ArticlesDTO> {
   const offset = page ? (page - 1) * 10 : 0;
-  const searchParams = tag
+  const searchParams = filter
     ? new URLSearchParams({
         limit: "10",
         offset: `${offset}`,
-        tag: tag,
+        tag: filter,
       })
     : new URLSearchParams({
         limit: "10",
@@ -52,11 +47,7 @@ export async function getGlobalArticles(
   }
 }
 
-export async function getYourArticles(
-  token: string,
-  controller?: AbortController,
-  page?: number
-): Promise<ArticlesDTO> {
+export async function getYourArticles(token: string, controller?: AbortController, page?: number): Promise<ArticlesDTO> {
   const offset = page ? (page - 1) * 10 : 0;
   const searchParams = new URLSearchParams({
     limit: "10",
@@ -79,17 +70,11 @@ export async function getYourArticles(
   }
 }
 
-export async function getProfileArticles(
-  username: string,
-  tab: Tab,
-  token: string,
-  controller?: AbortController,
-  page?: number
-): Promise<ArticlesDTO> {
+export async function getProfileArticles(username: string, tab: string, token: string, controller?: AbortController, page?: number): Promise<ArticlesDTO> {
   const offset = page ? (page - 1) * 5 : 0;
 
   const searchParams =
-    tab == Tab.FavArticles
+    tab == Tab.Fav
       ? new URLSearchParams({
           limit: "5",
           offset: `${offset}`,
