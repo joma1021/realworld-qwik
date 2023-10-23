@@ -1,8 +1,8 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
-import styles from "./global.css?inline";
 import AuthProvider from "./common/auth/auth-provider";
+import "./global.css";
 
 export default component$(() => {
   /**
@@ -11,7 +11,6 @@ export default component$(() => {
    *
    * Don't remove the `<head>` and `<body>` elements.
    */
-  useStyles$(styles);
 
   return (
     <QwikCityProvider>
