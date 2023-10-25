@@ -7,14 +7,12 @@
  * - https://qwik.builder.io/docs/deployments/node/
  *
  */
-import {
-  createQwikCity,
-  type PlatformNode,
-} from "@builder.io/qwik-city/middleware/node";
+import { createQwikCity, type PlatformNode } from "@builder.io/qwik-city/middleware/node";
 import qwikCityPlan from "@qwik-city-plan";
 import { manifest } from "@qwik-client-manifest";
 import render from "./entry.ssr";
 import express from "express";
+import compression from "compression";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 
@@ -49,7 +47,7 @@ const { router, notFound } = createQwikCity({
 const app = express();
 
 // Enable gzip compression
-// app.use(compression());
+app.use(compression());
 
 // Static asset handlers
 // https://expressjs.com/en/starter/static-files.html
