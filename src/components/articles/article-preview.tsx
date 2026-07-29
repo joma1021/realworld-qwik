@@ -8,7 +8,7 @@ export const ArticlePreview = component$((props: { article: ArticleData; key: st
     <div class="article-preview" key={props.key}>
       <div class="article-meta">
         <Link href={`/profile/${props.article.author.username}`}>
-          <img src={`${props.article.author.image}`} />
+          <img width={32} height={32} src={`${props.article.author.image}`} />
         </Link>
         <div class="info">
           <a href={`/profile/${props.article.author.username}`} class="author">

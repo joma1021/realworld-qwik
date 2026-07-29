@@ -56,9 +56,11 @@ export default component$(() => {
       if (response.status == 422) {
         registerStore.hasError = true;
         const data = await response.json();
-        data.status == "error"
-          ? (registerStore.errorMessages = { ["Error: "]: [data.message] })
-          : (registerStore.errorMessages = data.errors);
+        if (data.status == "error") {
+          registerStore.errorMessages = { ["Error: "]: [data.message] };
+        } else {
+          registerStore.errorMessages = data.errors;
+        }
       } else {
         registerStore.hasError = true;
         registerStore.errorMessages = { [""]: ["unknown error"] };

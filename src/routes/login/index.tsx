@@ -48,9 +48,11 @@ export default component$(() => {
       if (response.status == 403 || response.status == 422) {
         loginStore.hasError = true;
         const data = await response.json();
-        data.status == "error"
-          ? (loginStore.errorMessages = { ["Error: "]: [data.message] })
-          : (loginStore.errorMessages = data.errors);
+        if (data.status == "error") {
+          loginStore.errorMessages = { ["Error: "]: [data.message] };
+        } else {
+          loginStore.errorMessages = data.errors;
+        }
       } else {
         loginStore.hasError = true;
         loginStore.errorMessages = { [""]: ["unknown error"] };

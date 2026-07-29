@@ -13,7 +13,7 @@ export default component$(() => {
         <Resource
           value={tags}
           onPending={() => <div>Loading Tags...</div>}
-          onRejected={(reason) => <div>Error: {reason}</div>}
+          onRejected={(reason) => <div>Error: {reason.message}</div>}
           onResolved={(tags) => (
             <div class="tag-list">
               {tags.map((tag) => (

@@ -17,7 +17,7 @@ export async function getProfile(username: string, token: string, controller?: A
 
     const data = await response.json();
     return data.profile;
-  } catch (e) {
+  } catch {
     return Promise.reject("Error occurred while fetching data");
   }
 }

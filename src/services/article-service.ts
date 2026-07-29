@@ -13,7 +13,7 @@ export async function getTags(): Promise<string[]> {
     console.log("FETCH tags resolved");
     const data = await response.json();
     return data.tags;
-  } catch (e) {
+  } catch {
     return Promise.reject("Error occurred while fetching data");
   }
 }
@@ -42,7 +42,7 @@ export async function getGlobalArticles(controller?: AbortController, page?: num
     }
     console.log("FETCH articles resolved");
     return await response.json();
-  } catch (e) {
+  } catch {
     return Promise.reject("Error occurred while fetching data");
   }
 }
@@ -65,7 +65,7 @@ export async function getYourArticles(token: string, controller?: AbortControlle
     }
     console.log("FETCH articles resolved");
     return await response.json();
-  } catch (e) {
+  } catch {
     return Promise.reject("Error occurred while fetching data");
   }
 }
@@ -98,7 +98,7 @@ export async function getProfileArticles(username: string, tab: string, token: s
     }
     console.log("FETCH articles resolved");
     return await response.json();
-  } catch (e) {
+  } catch {
     return Promise.reject("Error occurred while fetching data");
   }
 }
@@ -117,7 +117,7 @@ export async function getArticle(slug: string, token?: string, controller?: Abor
     console.log("FETCH article resolved");
     const data = await response.json();
     return data.article;
-  } catch (e) {
+  } catch {
     return Promise.reject("Error occurred while fetching data");
   }
 }

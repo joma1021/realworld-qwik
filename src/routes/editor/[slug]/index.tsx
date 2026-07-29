@@ -93,10 +93,11 @@ export default component$(() => {
       if (!response.ok) {
         if (response.status == 422) {
           editArticleStore.hasError = true;
-          const data = await response.json();
-          data.status == "error"
-            ? (editArticleStore.errorMessages = { ["Error: "]: [data.message] })
-            : (editArticleStore.errorMessages = data.errors);
+          if (data.status == "error") {
+            editArticleStore.errorMessages = { ["Error: "]: [data.message] };
+          } else {
+            editArticleStore.errorMessages = data.errors;
+          }
         } else {
           editArticleStore.hasError = true;
           editArticleStore.errorMessages = { [""]: ["unknown error"] };
@@ -118,7 +119,7 @@ export default component$(() => {
             <Resource
               value={article}
               onPending={() => <div>Loading Article...</div>}
-              onRejected={(reason) => <div>Error: {reason}</div>}
+              onRejected={(reason) => <div>Error: {reason.message}</div>}
               onResolved={(article) => (
                 <form>
                   <fieldset>
@@ -129,10 +130,7 @@ export default component$(() => {
                         name="title"
                         placeholder="Article Title"
                         value={article.title}
-                        onChange$={$(
-                          (event: { target: { value: string } }) =>
-                            (editArticleStore.article.title = event.target.value)
-                        )}
+                        onChange$={$((_, element) => (editArticleStore.article.title = element.value))}
                       />
                     </fieldset>
                     <fieldset class="form-group">
@@ -142,10 +140,7 @@ export default component$(() => {
                         name="description"
                         placeholder="What's this article about?"
                         value={article.description}
-                        onChange$={$(
-                          (event: { target: { value: string } }) =>
-                            (editArticleStore.article.description = event.target.value)
-                        )}
+                        onChange$={$((_, element) => (editArticleStore.article.description = element.value))}
                       />
                     </fieldset>
                     <fieldset class="form-group">
@@ -155,9 +150,7 @@ export default component$(() => {
                         name="body"
                         placeholder="Write your article (in markdown)"
                         value={article.body}
-                        onChange$={$(
-                          (event: { target: { value: string } }) => (editArticleStore.article.body = event.target.value)
-                        )}
+                        onChange$={$((_, element) => (editArticleStore.article.body = element.value))}
                       ></textarea>
                     </fieldset>
                     <fieldset class="form-group">

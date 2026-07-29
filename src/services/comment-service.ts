@@ -16,7 +16,7 @@ export async function getComments(slug: string, token: string, controller?: Abor
     console.log("FETCH article resolved");
     const data = await response.json();
     return data.comments;
-  } catch (e) {
+  } catch {
     return Promise.reject("Error occurred while fetching data");
   }
 }
