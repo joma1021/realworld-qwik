@@ -4,7 +4,7 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { useNavigate } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
-import { validateInput } from "~/common/helpers";
+import { validateInput, parseApiErrors } from "~/common/helpers";
 import FormError from "~/components/errors/form-error";
 import type { EditArticleData } from "~/models/article";
 import { createArticle } from "~/services/article-service";
@@ -78,16 +78,11 @@ export default component$(() => {
       const response = await createArticle(userSession.authToken, newArticle);
 
       if (!response.ok) {
-        if (response.status == 422) {
-          createArticleStore.hasError = true;
+        createArticleStore.hasError = true;
+        if (response.status == 422 || response.status == 400) {
           const data = await response.json();
-          if (data.status == "error") {
-            createArticleStore.errorMessages = { ["Error: "]: [data.message] };
-          } else {
-            createArticleStore.errorMessages = data.errors;
-          }
+          createArticleStore.errorMessages = parseApiErrors(data);
         } else {
-          createArticleStore.hasError = true;
           createArticleStore.errorMessages = { [""]: ["unknown error"] };
         }
       } else {

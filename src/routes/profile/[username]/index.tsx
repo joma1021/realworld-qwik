@@ -1,6 +1,7 @@
 import { Resource, component$, useContext, useResource$, $ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { useLocation, useNavigate } from "@builder.io/qwik-city";
+import { resolveImage } from "~/common/api";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
 import type { AuthorData } from "~/models/author";
@@ -32,7 +33,7 @@ export default component$(() => {
               onRejected={(reason) => <div>Error: {reason.message}</div>}
               onResolved={(profile) => (
                 <div class="col-xs-12 col-md-10 offset-md-1">
-                  <img width={100} height={100} src={profile.image} class="user-img" />
+                  <img width={100} height={100} src={resolveImage(profile.image)} class="user-img" />
                   <h4>{profile.username}</h4>
                   <p>{profile.bio}</p>
 

@@ -4,6 +4,7 @@ import type { CommentData } from "~/models/comment";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
 import { Link } from "@builder.io/qwik-city";
+import { resolveImage } from "~/common/api";
 import { validateInput } from "~/common/helpers";
 import { createComment, deleteComment, getComments } from "~/services/comment-service";
 
@@ -58,7 +59,7 @@ export default component$((props: { slug: string }) => {
               <textarea class="form-control" name="comment" placeholder="Write a comment..." rows={3}></textarea>
             </div>
             <div class="card-footer">
-              <img width={32} height={32} src={userSession.image} class="comment-author-img" />
+              <img width={32} height={32} src={resolveImage(userSession.image)} class="comment-author-img" />
               <button class="btn btn-sm btn-primary" type="submit" disabled={commentStore.isLoading}>
                 Post Comment{" "}
               </button>
@@ -89,11 +90,11 @@ export default component$((props: { slug: string }) => {
                     <p class="card-text">{comment.body}</p>
                   </div>
                   <div class="card-footer">
-                    <Link href={`/profile/${comment.author}`} class="comment-author">
-                      <img width={32} height={32} src={comment.author.image} class="comment-author-img" />
+                    <Link href={`/profile/${comment.author.username}`} class="comment-author">
+                      <img width={32} height={32} src={resolveImage(comment.author.image)} class="comment-author-img" />
                     </Link>
                     &nbsp;
-                    <Link href={`/profile/${comment.author}`} class="comment-author">
+                    <Link href={`/profile/${comment.author.username}`} class="comment-author">
                       {comment.author.username}
                     </Link>
                     <span class="date-posted">{comment.createdAt}</span>

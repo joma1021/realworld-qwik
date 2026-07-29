@@ -1,7 +1,7 @@
 import { component$, $, useStore, useContext } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link, useNavigate } from "@builder.io/qwik-city";
-import { updateUserSession, validateInput } from "~/common/helpers";
+import { updateUserSession, validateInput, parseApiErrors } from "~/common/helpers";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
 import AuthError from "~/components/errors/form-error";
@@ -45,16 +45,12 @@ export default component$(() => {
     };
     const response = await login(credentials);
     if (!response.ok) {
-      if (response.status == 403 || response.status == 422) {
-        loginStore.hasError = true;
+      loginStore.hasError = true;
+      // New RealWorld API returns 401 for invalid credentials (older backends used 403/422).
+      if (response.status == 401 || response.status == 403 || response.status == 422) {
         const data = await response.json();
-        if (data.status == "error") {
-          loginStore.errorMessages = { ["Error: "]: [data.message] };
-        } else {
-          loginStore.errorMessages = data.errors;
-        }
+        loginStore.errorMessages = parseApiErrors(data);
       } else {
-        loginStore.hasError = true;
         loginStore.errorMessages = { [""]: ["unknown error"] };
       }
     } else {

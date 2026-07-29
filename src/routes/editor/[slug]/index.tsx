@@ -4,7 +4,7 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { useLocation, useNavigate } from "@builder.io/qwik-city";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
-import { validateInput } from "~/common/helpers";
+import { validateInput, parseApiErrors } from "~/common/helpers";
 import FormError from "~/components/errors/form-error";
 import type { ArticleData, EditArticleData } from "~/models/article";
 import { getArticle, updateArticle } from "~/services/article-service";
@@ -39,7 +39,7 @@ export default component$(() => {
       tagList: article.tagList,
       title: article.title,
       description: article.description,
-      body: article.body,
+      body: article.body ?? "",
     };
 
     return article;
@@ -91,15 +91,10 @@ export default component$(() => {
       const data = await response.json();
 
       if (!response.ok) {
-        if (response.status == 422) {
-          editArticleStore.hasError = true;
-          if (data.status == "error") {
-            editArticleStore.errorMessages = { ["Error: "]: [data.message] };
-          } else {
-            editArticleStore.errorMessages = data.errors;
-          }
+        editArticleStore.hasError = true;
+        if (response.status == 422 || response.status == 400) {
+          editArticleStore.errorMessages = parseApiErrors(data);
         } else {
-          editArticleStore.hasError = true;
           editArticleStore.errorMessages = { [""]: ["unknown error"] };
         }
       } else {
@@ -149,7 +144,7 @@ export default component$(() => {
                         rows={8}
                         name="body"
                         placeholder="Write your article (in markdown)"
-                        value={article.body}
+                        value={article.body ?? ""}
                         onChange$={$((_, element) => (editArticleStore.article.body = element.value))}
                       ></textarea>
                     </fieldset>
@@ -158,7 +153,7 @@ export default component$(() => {
                       <div class="tag-list">
                         {editArticleStore.article.tagList.map((tag) => (
                           <span class="tag-default tag-pill" key={tag}>
-                            <i class="ion-close-round" onClicks$={() => onRemoveTag(tag)}></i>
+                            <i class="ion-close-round" onClick$={() => onRemoveTag(tag)}></i>
                             {tag}
                           </span>
                         ))}

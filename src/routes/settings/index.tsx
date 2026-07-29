@@ -1,5 +1,5 @@
 import { component$, $, useContext, useResource$, Resource, useStore } from "@builder.io/qwik";
-import { updateUserSession, validateInput } from "~/common/helpers";
+import { updateUserSession, validateInput, parseApiErrors } from "~/common/helpers";
 import type { UserSessionStore } from "~/common/auth/auth-provider";
 import { UserSessionContext } from "~/common/auth/auth-provider";
 import type { DocumentHead } from "@builder.io/qwik-city";
@@ -57,25 +57,23 @@ export default component$(() => {
       return;
     }
 
-    if (validateInput(image)) {
-      settingsStore.errorMessages = { [image]: ["image can't be blank"] };
-      settingsStore.hasError = true;
-      settingsStore.isLoading = false;
-      return;
-    }
-
     const user: UpdateUser = {
       username: username,
       email: email,
-      image: image,
     };
+    if (image) user.image = image;
     if (bio) user.bio = bio;
     if (password) user.password = password;
     const response = await updateUser(user, userSession.authToken);
 
     if (!response.ok) {
       settingsStore.hasError = true;
-      settingsStore.errorMessages = { [""]: ["unknown error"] };
+      try {
+        const data = await response.json();
+        settingsStore.errorMessages = parseApiErrors(data);
+      } catch {
+        settingsStore.errorMessages = { [""]: ["unknown error"] };
+      }
     } else {
       const data = await response.json();
       updateUserSession(userSession, data.user.username, data.user.image, true, data.user.token);
@@ -106,7 +104,7 @@ export default component$(() => {
                         type="text"
                         name="image"
                         placeholder="URL of profile picture"
-                        value={currentUser.image}
+                        value={currentUser.image ?? ""}
                       />
                     </fieldset>
                     <fieldset class="form-group">
@@ -125,7 +123,7 @@ export default component$(() => {
                         rows={8}
                         name="bio"
                         placeholder="Short bio about you"
-                        value={currentUser.bio}
+                        value={currentUser.bio ?? ""}
                       ></textarea>
                     </fieldset>
                     <fieldset class="form-group">

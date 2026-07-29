@@ -3,7 +3,7 @@ import { setHeaders } from "~/common/headers";
 import type { AuthorData } from "~/models/author";
 
 export async function getProfile(username: string, token: string, controller?: AbortController): Promise<AuthorData> {
-  console.log("FETCH", `${BASE_URL}/${username}`);
+  console.log("FETCH", `${BASE_URL}/profiles/${username}`);
   try {
     const response = await fetch(`${BASE_URL}/profiles/${username}`, {
       method: "GET",
