@@ -1,6 +1,7 @@
 import { Resource, component$, useContext, useResource$, $, useSignal, useStore } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link, useLocation, useNavigate } from "@builder.io/qwik-city";
+import { resolveImage } from "~/common/api";
 import Comments from "~/components/comments/comments";
 import type { ArticleData } from "~/models/article";
 import { deleteArticle, getArticle } from "~/services/article-service";
@@ -46,7 +47,7 @@ export default component$(() => {
 
                 <div class="article-meta">
                   <Link href={`/profile/${article.author.username}`}>
-                    <img width={32} height={32} src={article.author.image} />
+                    <img width={32} height={32} src={resolveImage(article.author.image)} />
                   </Link>
                   <div class="info">
                     <Link href={`/profile/${article.author.username}`} class="author">
@@ -111,7 +112,7 @@ export default component$(() => {
               <div class="article-actions">
                 <div class="article-meta">
                   <Link href="profile.html">
-                    <img width={32} height={32} src={article.author.image} />
+                    <img width={32} height={32} src={resolveImage(article.author.image)} />
                   </Link>
                   <div class="info">
                     <Link href="" class="author">

@@ -1,5 +1,5 @@
 import type { CookieOptions, RequestHandler } from "@builder.io/qwik-city";
-import { BASE_URL } from "~/common/api";
+import { BASE_URL, resolveImage } from "~/common/api";
 import { setHeaders } from "~/common/headers";
 
 export const onPost: RequestHandler = async ({ send, cookie, parseBody, url, next }) => {
@@ -21,9 +21,9 @@ export const onPost: RequestHandler = async ({ send, cookie, parseBody, url, nex
     const cookieOptions: CookieOptions = { httpOnly: true, maxAge: [1, "days"], path: "/" };
     cookie.set("authToken", data.user.token, cookieOptions);
     cookie.set("username", data.user.username, cookieOptions);
-    cookie.set("image", data.user.image, cookieOptions);
-    const response = new Response(JSON.stringify(data), { status: 200 });
-    send(response);
+    cookie.set("image", resolveImage(data.user.image), cookieOptions);
+    const success = new Response(JSON.stringify(data), { status: 200 });
+    send(success);
   }
 };
 

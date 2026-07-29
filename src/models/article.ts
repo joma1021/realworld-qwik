@@ -6,11 +6,11 @@ export interface ArticleData {
   title: string;
   description: string;
   createdAt: string;
-  updatedAT: string;
+  updatedAt: string;
   favorited: boolean;
   favoritesCount: number;
   slug: string;
-  body: string;
+  body?: string | null;
 }
 
 export interface ArticlesDTO {

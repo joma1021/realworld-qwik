@@ -1,7 +1,7 @@
 import { component$, $, useStore, useContext } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link, useNavigate } from "@builder.io/qwik-city";
-import { updateUserSession, validateInput } from "~/common/helpers";
+import { updateUserSession, validateInput, parseApiErrors } from "~/common/helpers";
 import { UserSessionContext, type UserSessionStore } from "~/common/auth/auth-provider";
 import AuthError from "~/components/errors/form-error";
 import type { RegisterCredentials } from "~/models/auth";
@@ -53,16 +53,11 @@ export default component$(() => {
     };
     const response = await register(credentials);
     if (!response.ok) {
-      if (response.status == 422) {
-        registerStore.hasError = true;
+      registerStore.hasError = true;
+      if (response.status == 422 || response.status == 400) {
         const data = await response.json();
-        if (data.status == "error") {
-          registerStore.errorMessages = { ["Error: "]: [data.message] };
-        } else {
-          registerStore.errorMessages = data.errors;
-        }
+        registerStore.errorMessages = parseApiErrors(data);
       } else {
-        registerStore.hasError = true;
         registerStore.errorMessages = { [""]: ["unknown error"] };
       }
     } else {
