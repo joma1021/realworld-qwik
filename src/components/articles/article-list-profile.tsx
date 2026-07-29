@@ -36,7 +36,7 @@ export const ArticleListProfile = component$((props: { username: string }) => {
           <Resource
             value={articles}
             onPending={() => <div>Loading Articles...</div>}
-            onRejected={(reason) => <div>Error: {reason}</div>}
+            onRejected={(reason) => <div>Error: {reason.message}</div>}
             onResolved={(articles) => (
               <>
                 {articles.articles.length == 0 ? (

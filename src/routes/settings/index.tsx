@@ -96,7 +96,7 @@ export default component$(() => {
             <Resource
               value={currentUser}
               onPending={() => <div>Loading User-Data...</div>}
-              onRejected={(reason) => <div>Error: {reason}</div>}
+              onRejected={(reason) => <div>Error: {reason.message}</div>}
               onResolved={(currentUser) => (
                 <form onSubmit$={handleSubmit} preventdefault:submit>
                   <fieldset>

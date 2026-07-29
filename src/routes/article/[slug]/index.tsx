@@ -37,7 +37,7 @@ export default component$(() => {
       <Resource
         value={article}
         onPending={() => <div>Loading Article...</div>}
-        onRejected={(reason) => <div>Error: {reason}</div>}
+        onRejected={(reason) => <div>Error: {reason.message}</div>}
         onResolved={(article) => (
           <div class="article-page">
             <div class="banner">
@@ -46,7 +46,7 @@ export default component$(() => {
 
                 <div class="article-meta">
                   <Link href={`/profile/${article.author.username}`}>
-                    <img src={article.author.image} />
+                    <img width={32} height={32} src={article.author.image} />
                   </Link>
                   <div class="info">
                     <Link href={`/profile/${article.author.username}`} class="author">
@@ -111,7 +111,7 @@ export default component$(() => {
               <div class="article-actions">
                 <div class="article-meta">
                   <Link href="profile.html">
-                    <img src={article.author.image} />
+                    <img width={32} height={32} src={article.author.image} />
                   </Link>
                   <div class="info">
                     <Link href="" class="author">

@@ -29,10 +29,10 @@ export default component$(() => {
             <Resource
               value={profile}
               onPending={() => <div>Loading Profile...</div>}
-              onRejected={(reason) => <div>Error: {reason}</div>}
+              onRejected={(reason) => <div>Error: {reason.message}</div>}
               onResolved={(profile) => (
                 <div class="col-xs-12 col-md-10 offset-md-1">
-                  <img src={profile.image} class="user-img" />
+                  <img width={100} height={100} src={profile.image} class="user-img" />
                   <h4>{profile.username}</h4>
                   <p>{profile.bio}</p>
 

@@ -81,9 +81,11 @@ export default component$(() => {
         if (response.status == 422) {
           createArticleStore.hasError = true;
           const data = await response.json();
-          data.status == "error"
-            ? (createArticleStore.errorMessages = { ["Error: "]: [data.message] })
-            : (createArticleStore.errorMessages = data.errors);
+          if (data.status == "error") {
+            createArticleStore.errorMessages = { ["Error: "]: [data.message] };
+          } else {
+            createArticleStore.errorMessages = data.errors;
+          }
         } else {
           createArticleStore.hasError = true;
           createArticleStore.errorMessages = { [""]: ["unknown error"] };
@@ -111,10 +113,7 @@ export default component$(() => {
                     class="form-control form-control-lg"
                     name="title"
                     placeholder="Article Title"
-                    onChange$={$(
-                      (event: { target: { value: string } }) =>
-                        (createArticleStore.newArticle.title = event.target.value)
-                    )}
+                    onChange$={$((_, element) => (createArticleStore.newArticle.title = element.value))}
                   />
                 </fieldset>
                 <fieldset class="form-group">
@@ -123,10 +122,7 @@ export default component$(() => {
                     class="form-control"
                     name="description"
                     placeholder="What's this article about?"
-                    onChange$={$(
-                      (event: { target: { value: string } }) =>
-                        (createArticleStore.newArticle.description = event.target.value)
-                    )}
+                    onChange$={$((_, element) => (createArticleStore.newArticle.description = element.value))}
                   />
                 </fieldset>
                 <fieldset class="form-group">
@@ -135,10 +131,7 @@ export default component$(() => {
                     rows={8}
                     name="body"
                     placeholder="Write your article (in markdown)"
-                    onChange$={$(
-                      (event: { target: { value: string } }) =>
-                        (createArticleStore.newArticle.body = event.target.value)
-                    )}
+                    onChange$={$((_, element) => (createArticleStore.newArticle.body = element.value))}
                   ></textarea>
                 </fieldset>
                 <fieldset class="form-group">

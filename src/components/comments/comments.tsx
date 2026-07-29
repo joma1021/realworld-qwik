@@ -58,7 +58,7 @@ export default component$((props: { slug: string }) => {
               <textarea class="form-control" name="comment" placeholder="Write a comment..." rows={3}></textarea>
             </div>
             <div class="card-footer">
-              <img src={userSession.image} class="comment-author-img" />
+              <img width={32} height={32} src={userSession.image} class="comment-author-img" />
               <button class="btn btn-sm btn-primary" type="submit" disabled={commentStore.isLoading}>
                 Post Comment{" "}
               </button>
@@ -80,7 +80,7 @@ export default component$((props: { slug: string }) => {
         <Resource
           value={comments}
           onPending={() => <div>Loading Comments...</div>}
-          onRejected={(reason) => <div>Error: {reason}</div>}
+          onRejected={(reason) => <div>Error: {reason.message}</div>}
           onResolved={(comments) => (
             <div class="tag-list">
               {comments.map((comment) => (
@@ -90,7 +90,7 @@ export default component$((props: { slug: string }) => {
                   </div>
                   <div class="card-footer">
                     <Link href={`/profile/${comment.author}`} class="comment-author">
-                      <img src={comment.author.image} class="comment-author-img" />
+                      <img width={32} height={32} src={comment.author.image} class="comment-author-img" />
                     </Link>
                     &nbsp;
                     <Link href={`/profile/${comment.author}`} class="comment-author">

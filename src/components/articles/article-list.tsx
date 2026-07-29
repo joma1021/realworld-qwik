@@ -33,7 +33,7 @@ export const ArticleList = component$(() => {
       <Resource
         value={articles}
         onPending={() => <div>Loading Articles...</div>}
-        onRejected={(reason) => <div>Error: {reason}</div>}
+        onRejected={(reason) => <div>Error: {reason.message}</div>}
         onResolved={(articles) => (
           <>
             {articles.articles.length == 0 ? (
